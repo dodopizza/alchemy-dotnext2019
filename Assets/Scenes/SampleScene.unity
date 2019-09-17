@@ -348,7 +348,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 193348914}
   m_Direction: 0
   m_Value: 0
-  m_Size: 1
+  m_Size: 0.99999994
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -862,9 +862,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ed75ca5484a72654db2c0ddcba73efb4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  prefabType: {fileID: 7718693713899033061, guid: cbf484dbbcc433c40ba80a25936ecf51,
+  elementPrefabType: {fileID: 7718693713899033061, guid: cbf484dbbcc433c40ba80a25936ecf51,
     type: 3}
-  elementContainer: {fileID: 1061836932}
+  elementsParent: {fileID: 1061836932}
 --- !u!4 &1313545364
 Transform:
   m_ObjectHideFlags: 0
