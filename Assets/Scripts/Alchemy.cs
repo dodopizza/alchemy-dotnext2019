@@ -18,7 +18,8 @@ public class Alchemy : MonoBehaviour
         foreach (var elementData in elements)
         {
             var element = Instantiate(prefabType, elementContainer.transform);
-            element.GetComponent<Image>().color = elementData.color;    
+
+            element.GetComponent<Element>().SetElementData(elementData);
         }
     }
 

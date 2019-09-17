@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 7718693713899033085}
   - component: {fileID: 7718693713899033086}
   - component: {fileID: 7718693713899033087}
-  - component: {fileID: 7718693713899033056}
+  - component: {fileID: -3800124074511133803}
   m_Layer: 0
   m_Name: Element
   m_TagString: Untagged
@@ -114,7 +114,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   isSelected: 0
---- !u!114 &7718693713899033056
+--- !u!114 &-3800124074511133803
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -123,9 +123,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 7718693713899033061}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0e3837cd44482a8459c76be5c56a41d3, type: 3}
+  m_Script: {fileID: 11500000, guid: a8964cbfe91ac7547bd736cc9087911b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  AutoGetDefaultColor: 1
-  DefaultColor: {r: 1, g: 1, b: 1, a: 0.78431374}
-  SelectedColor: {r: 0, g: 1, b: 0, a: 1}
