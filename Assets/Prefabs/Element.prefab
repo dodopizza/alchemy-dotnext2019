@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 7718693713899033087}
   - component: {fileID: 7718693713899033056}
   m_Layer: 0
-  m_Name: Element1
+  m_Name: Element
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -94,7 +94,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 7718693713899033060}
-        m_MethodName: SetAsLastSibling
+        m_MethodName: 
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
