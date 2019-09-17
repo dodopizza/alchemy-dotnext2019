@@ -1,13 +1,14 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using ElementProvider;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class Alchemy : MonoBehaviour
 {
-    public GameObject prefabType;
-    public GameObject elementContainer;
+    public GameObject elementPrefabType;
+    public GameObject elementsParent;
     
     // Start is called before the first frame update
     void Start()
@@ -17,7 +18,7 @@ public class Alchemy : MonoBehaviour
 
         foreach (var elementData in elements)
         {
-            var element = Instantiate(prefabType, elementContainer.transform);
+            var element = Instantiate(elementPrefabType, elementsParent.transform);
 
             element.GetComponent<Element>().SetElementData(elementData);
         }
