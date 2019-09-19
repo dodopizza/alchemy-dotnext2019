@@ -14,7 +14,8 @@ namespace ElementProvider
                 new ElementData { color = Color.black },
                 new ElementData { color = Color.cyan },
                 new ElementData { color = Color.gray },
-                new ElementData { color = Color.green },
+                new ElementData { color = Color.magenta },
+                new ElementData { color = Color.yellow },
             };
         }
     }

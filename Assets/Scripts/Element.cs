@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System;
 using Lean.Touch;
 using UnityEngine;
 using UnityEngine.UI;
@@ -8,7 +7,11 @@ public class Element : LeanSelectableBehaviour
 {
     private Color _selectedColor = Color.green;
     private Color _defaultColor;
+    private Alchemy _gameMaster;
 
+    public ElementData elementData;
+
+    private Action<ElementData> _onElementSelect;
     // Start is called before the first frame update
 
     void Start()
@@ -25,7 +28,13 @@ public class Element : LeanSelectableBehaviour
 
     protected override void OnSelect(LeanFinger finger)
     {
+        if (_onElementSelect == null)
+        {
+            return;
+        }
+        
         ChangeColor(_selectedColor);
+        _onElementSelect(elementData);
     }
 
     protected override void OnDeselect()
@@ -39,8 +48,16 @@ public class Element : LeanSelectableBehaviour
         graphic.color = color;
     }
 
-    public void SetElementData(ElementData data)
+    public void Init(ElementData data, Action<ElementData> onElementSelect)
     {
+        _onElementSelect = onElementSelect;
+        Init(data);        
+    }
+    
+    public void Init(ElementData data)
+    {
+        elementData = data;
+        
         _defaultColor = data.color;
         ChangeColor(_defaultColor);
     }
