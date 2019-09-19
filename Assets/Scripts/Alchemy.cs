@@ -18,10 +18,6 @@ public class Alchemy : MonoBehaviour
         }
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-    }
 
     private void ElementSelected(ElementData element)
     {

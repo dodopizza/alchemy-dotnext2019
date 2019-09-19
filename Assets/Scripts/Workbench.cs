@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Workbench : MonoBehaviour
 {
@@ -18,5 +19,10 @@ public class Workbench : MonoBehaviour
         var element = elementObject.GetComponent<Element>();
         element.Init(elementData);
         currentElements.Add(element);
+    }
+
+    public void MixElements()
+    {
+        Debug.Log("1234");
     }
 }

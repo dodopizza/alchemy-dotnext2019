@@ -12,20 +12,7 @@ public class Element : LeanSelectableBehaviour
     public ElementData elementData;
 
     private Action<ElementData> _onElementSelect;
-    // Start is called before the first frame update
-
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-
-    void Update()
-    {
-        
-    }
-
+ 
     protected override void OnSelect(LeanFinger finger)
     {
         if (_onElementSelect == null)
