@@ -1,12 +1,20 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
+using ElementProvider;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class Workbench : MonoBehaviour
 {
     public int elementsMaximum = 2;
-    public List<Element> currentElements = new List<Element>();
+    public List<ElementData> currentElements = new List<ElementData>();
     public GameObject elementPrefabType;
+    private Func<ElementData, bool> _onMixSuccess;
+    
+    public void Init(Func<ElementData, bool> onMixSuccess)
+    {
+        _onMixSuccess = onMixSuccess;
+    }
     
     public void AddElement(ElementData elementData)
     {
@@ -18,11 +26,34 @@ public class Workbench : MonoBehaviour
         var elementObject = Instantiate(elementPrefabType, transform);
         var element = elementObject.GetComponent<Element>();
         element.Init(elementData);
-        currentElements.Add(element);
+        currentElements.Add(element.elementData);
     }
 
     public void MixElements()
     {
-        Debug.Log("1234");
+        var elementsMixer = ElementMixerFactory.Mixer;
+        var elementData = elementsMixer.MixElements(currentElements);
+
+        if (elementData == null)
+        {
+            Debug.Log("Try Again");
+        }
+        else
+        {
+            if (_onMixSuccess(elementData))
+            {
+                Debug.Log("Element added");
+            }
+            else
+            {
+                Debug.Log("Element already exists");
+            }
+        }
+        
+        currentElements.Clear();
+        foreach (Transform child in transform)
+        {
+            Destroy(child.gameObject);
+        }
     }
 }

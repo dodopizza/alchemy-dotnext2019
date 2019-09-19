@@ -1,4 +1,6 @@
-﻿using ElementProvider;
+﻿using System.Collections;
+using System.Collections.Generic;
+using ElementProvider;
 using UnityEngine;
 
 public class Alchemy : MonoBehaviour
@@ -11,16 +13,23 @@ public class Alchemy : MonoBehaviour
     {
         var elementProvider = ElementProviderFactory.Provider;
         var elements = elementProvider.GetElements();
+        
+        workbench.Init(MixSuccess);
+        elementsBook.Init(ElementSelected);
 
         foreach (var elementData in elements)
         {
-            elementsBook.AddElement(elementData, ElementSelected);
+            elementsBook.AddElement(elementData);
         }
     }
-
 
     private void ElementSelected(ElementData element)
     {
         workbench.AddElement(element);
+    }
+    
+    private bool MixSuccess(ElementData elementData)
+    {
+        return elementsBook.TryAddElement(elementData);
     }
 }
