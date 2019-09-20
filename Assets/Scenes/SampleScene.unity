@@ -1012,7 +1012,7 @@ GameObject:
   - component: {fileID: 1313545364}
   - component: {fileID: 1313545363}
   m_Layer: 0
-  m_Name: GameMaster
+  m_Name: Alchemy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
