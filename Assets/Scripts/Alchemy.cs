@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using ElementProvider;
+﻿using ElementProvider;
 using UnityEngine;
 
 public class Alchemy : MonoBehaviour
