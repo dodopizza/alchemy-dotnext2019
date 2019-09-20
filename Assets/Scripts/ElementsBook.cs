@@ -1,10 +1,13 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class ElementsBook : MonoBehaviour
 {
     public GameObject elementPrefabType;
     private Action<ElementData> _onElementSelect;
+    private readonly List<Element> _knownElements = new List<Element>();
 
     public void Init(Action<ElementData> onElementSelect)
     {
@@ -15,11 +18,19 @@ public class ElementsBook : MonoBehaviour
     {
         var elementObject = Instantiate(elementPrefabType, transform);
 
-        elementObject.GetComponent<Element>().Init(elementData, _onElementSelect);
+        var element = elementObject.GetComponent<Element>();
+        element.Init(elementData, _onElementSelect);
+        _knownElements.Add(element);
     }
 
     public bool TryAddElement(ElementData elementData)
     {
+        if (_knownElements.Any(element => element.elementData.color == elementData.color))
+        {
+            Debug.Log("Element already exists!");
+            return false;
+        }
+
         AddElement(elementData);
         return true;
     }
