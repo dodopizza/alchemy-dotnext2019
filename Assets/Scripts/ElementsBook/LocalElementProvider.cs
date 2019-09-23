@@ -10,13 +10,13 @@ namespace ElementsBook
         {
             return Task.FromResult(new List<ElementData>
             {
-                new ElementData { color = Color.blue },
-                new ElementData { color = Color.red },
-                new ElementData { color = Color.black },
-                new ElementData { color = Color.cyan },
-                new ElementData { color = Color.gray },
-                new ElementData { color = Color.magenta },
-                new ElementData { color = Color.yellow },
+                new ElementData { r = Color.blue.r, g = Color.blue.g, b = Color.blue.b },
+                new ElementData { r = Color.red.r, g = Color.red.g, b = Color.red.b },
+                new ElementData { r = Color.black.r, g = Color.black.g, b = Color.black.b },
+                new ElementData { r = Color.cyan.r, g = Color.cyan.g, b = Color.cyan.b },
+                new ElementData { r = Color.gray.r, g = Color.gray.g, b = Color.gray.b },
+                new ElementData { r = Color.magenta.r, g = Color.magenta.g, b = Color.magenta.b },
+                new ElementData { r = Color.yellow.r, g = Color.yellow.g, b = Color.yellow.b },
             });
         }
     }

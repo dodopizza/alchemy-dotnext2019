@@ -15,7 +15,9 @@ namespace ElementMixer
             
             return new ElementData
             {
-                color = new Color(0.5f, 0.1f, 0.4f)
+                r = 0.5f,
+                g = 0.1f,
+                b = 0.4f
             };
         }
     }

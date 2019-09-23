@@ -27,7 +27,7 @@ namespace ElementsBook
 
         public bool TryAddElement(ElementData elementData)
         {
-            if (_knownElements.Any(element => element.elementData.color == elementData.color))
+            if (_knownElements.Any(element => element.elementData.Color == elementData.Color))
             {
                 Debug.Log("Element already exists!");
                 return false;

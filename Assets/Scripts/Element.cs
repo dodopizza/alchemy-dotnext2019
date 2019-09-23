@@ -45,7 +45,7 @@ public class Element : LeanSelectableBehaviour
     {
         elementData = data;
         
-        _defaultColor = data.color;
+        _defaultColor = data.Color;
         ChangeColor(_defaultColor);
     }
 }

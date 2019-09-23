@@ -15,12 +15,6 @@ namespace Workbench
         public void Init(Func<ElementData, bool> onMixSuccess)
         {
             _onMixSuccess = onMixSuccess;
-            var request = UnityWebRequest.Get("http://localhost:5000/api/values");
-            var operation = request.SendWebRequest();
-            operation.completed += asyncOperation =>
-            {
-                Debug.Log(request.downloadHandler.text);
-            };
         }
    
         public void AddElement(ElementData elementData)
@@ -36,7 +30,7 @@ namespace Workbench
             currentElements.Add(element.elementData);
         }
 
-        public async void MixElements()
+        public void MixElements()
         {
             var elementsMixer = ElementMixerFactory.Mixer;
             var elementData = elementsMixer.MixElements(currentElements);
