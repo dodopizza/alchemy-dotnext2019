@@ -26,7 +26,6 @@ namespace ElementsBook
                 try
                 {
                     // TODO Fail fast on 4xx/5xx responses
-                    Debug.Log(request.downloadHandler.text);
                     var response = JsonUtility.FromJson<ElementBookResponse>(request.downloadHandler.text);
                     taskCompletionSource.TrySetResult(response.elementData.ToList());
                 }
