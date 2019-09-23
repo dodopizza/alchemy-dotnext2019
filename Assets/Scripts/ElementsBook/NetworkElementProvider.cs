@@ -13,7 +13,7 @@ namespace ElementsBook
             var taskCompletionSource = new TaskCompletionSource<List<ElementData>>();
 
             var request = UnityWebRequest.Get(Constants.ApiUrl + "api/values");
-            request.timeout = 3;
+            request.timeout = Constants.RpcTimeoutSeconds;
             var operation = request.SendWebRequest();
             operation.completed += asyncOperation =>
             {
