@@ -1,16 +1,16 @@
-﻿using ElementProvider;
+﻿using ElementsBook;
 using UnityEngine;
 
 public class Alchemy : MonoBehaviour
 {
-    public ElementsBook elementsBook;
-    public Workbench workbench;
+    public ElementsBook.ElementsBook elementsBook;
+    public Workbench.Workbench workbench;
     
     // Start is called before the first frame update
-    void Start()
+    async void Start()
     {
         var elementProvider = ElementProviderFactory.Provider;
-        var elements = elementProvider.GetElements();
+        var elements = await elementProvider.GetElements();
         
         workbench.Init(MixSuccess);
         elementsBook.Init(ElementSelected);

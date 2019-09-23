@@ -1,4 +1,6 @@
-namespace ElementMixer
+using ElementMixer;
+
+namespace Workbench
 {
     public static class ElementMixerFactory
     {

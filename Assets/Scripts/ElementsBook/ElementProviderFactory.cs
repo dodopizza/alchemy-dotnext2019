@@ -1,4 +1,4 @@
-namespace ElementProvider
+namespace ElementsBook
 {
     public static class ElementProviderFactory
     {

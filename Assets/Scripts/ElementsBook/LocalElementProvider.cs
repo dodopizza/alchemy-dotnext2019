@@ -1,13 +1,14 @@
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 
-namespace ElementProvider
+namespace ElementsBook
 {
     public class LocalElementProvider : IElementProvider
     {
-        public List<ElementData> GetElements()
+        public Task<List<ElementData>> GetElements()
         {
-            return new List<ElementData>
+            return Task.FromResult(new List<ElementData>
             {
                 new ElementData { color = Color.blue },
                 new ElementData { color = Color.red },
@@ -16,7 +17,7 @@ namespace ElementProvider
                 new ElementData { color = Color.gray },
                 new ElementData { color = Color.magenta },
                 new ElementData { color = Color.yellow },
-            };
+            });
         }
     }
 }
