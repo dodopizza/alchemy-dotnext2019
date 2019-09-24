@@ -1,9 +1,10 @@
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
-namespace ElementMixer
+namespace Workbench
 {
     public interface IElementMixer
     {
-        ElementData MixElements(IEnumerable<ElementData> elementsData);
+        Task<MixResult> MixElements(IEnumerable<ElementData> elementsData);
     }
 }

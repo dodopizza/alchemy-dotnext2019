@@ -30,18 +30,18 @@ namespace Workbench
             currentElements.Add(element.elementData);
         }
 
-        public void MixElements()
+        public async void MixElements()
         {
             var elementsMixer = ElementMixerFactory.Mixer;
-            var elementData = elementsMixer.MixElements(currentElements);
+            var mixResult = await elementsMixer.MixElements(currentElements);
 
-            if (elementData == null)
+            if (!mixResult.success)
             {
                 Debug.Log("Try Again");
             }
             else
             {
-                if (_onMixSuccess(elementData))
+                if (_onMixSuccess(mixResult.result))
                 {
                     Debug.Log("Element added");
                 }
