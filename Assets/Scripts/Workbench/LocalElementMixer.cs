@@ -17,12 +17,7 @@ namespace Workbench
                 new MixResult
                 {
                     success = true,
-                    result = new ElementData
-                    {
-                        r = 0.5f,
-                        g = 0.1f,
-                        b = 0.4f
-                    }
+                    result = new ElementData{}
                 });
         }
     }

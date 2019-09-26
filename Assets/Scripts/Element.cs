@@ -5,47 +5,37 @@ using UnityEngine.UI;
 
 public class Element : LeanSelectableBehaviour
 {
-    private Color _selectedColor = Color.green;
-    private Color _defaultColor;
-    private Alchemy _gameMaster;
+    private Alchemy _alchemy;
 
     public ElementData elementData;
 
     private Action<ElementData> _onElementSelect;
- 
+
     protected override void OnSelect(LeanFinger finger)
     {
-        if (_onElementSelect == null)
-        {
-            return;
-        }
-        
-        ChangeColor(_selectedColor);
-        _onElementSelect(elementData);
+        _onElementSelect?.Invoke(elementData);
     }
 
     protected override void OnDeselect()
     {
-        ChangeColor(_defaultColor);
+        // use on deselect
     }
 
-    private void ChangeColor(Color color)
+    private void ChangeSprite(Sprite sprite)
     {
-        var graphic = GetComponent<Graphic>();
-        graphic.color = color;
+        var graphic = GetComponent<Image>();
+        graphic.sprite = sprite;
     }
 
     public void Init(ElementData data, Action<ElementData> onElementSelect)
     {
         _onElementSelect = onElementSelect;
-        Init(data);        
+        Init(data);
     }
-    
+
     public void Init(ElementData data)
     {
         elementData = data;
-        
-        _defaultColor = data.Color;
-        ChangeColor(_defaultColor);
+        ChangeSprite(_alchemy.GetSprite(data.spriteName));
     }
 }
