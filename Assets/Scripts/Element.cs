@@ -35,6 +35,7 @@ public class Element : LeanSelectableBehaviour
 
     public void Init(ElementData data)
     {
+        _alchemy = FindObjectOfType<Alchemy>();
         elementData = data;
         ChangeSprite(_alchemy.GetSprite(data.spriteName));
     }
