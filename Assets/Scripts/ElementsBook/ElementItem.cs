@@ -26,14 +26,14 @@ namespace ElementsBook
 
         public void OnPointerClick(PointerEventData eventData)
         {
-            if (GameManager.Instance.CheckAndLockInput())
-            {
-                var floatingElement = Instantiate(floatingElementPrefab, _canvas.transform);
-                floatingElement.transform.position = _image.transform.position;
+            if (!GameManager.Instance.CheckAndLockInput()) 
+                return;
+            
+            var floatingElement = Instantiate(floatingElementPrefab, _canvas.transform);
+            floatingElement.transform.position = _image.transform.position;
 
-                floatingElement.GetComponent<FloatingElement>()
-                    .SetUp(GameManager.Instance.GetMixElement(), _sprite);
-            }
+            floatingElement.GetComponent<FloatingElement>()
+                .SetUp(GameManager.Instance.GetMixElement(), _sprite);
         }
     }
 }

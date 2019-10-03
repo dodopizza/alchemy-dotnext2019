@@ -1,8 +1,7 @@
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace ElementsBook
 {
@@ -51,19 +50,21 @@ namespace ElementsBook
             return mixElementOne.IsEmpty ? mixElementOne : mixElementTwo;
         }
 
-        public void PerformMix()
+        public async Task PerformMix()
         {
             if (!mixElementOne.IsEmpty && !mixElementTwo.IsEmpty)
             {
-                mixElementOne.EraseElement();
-                mixElementTwo.EraseElement();
+                await Task.WhenAll(mixElementOne.EraseElement(), mixElementTwo.EraseElement());
             }
         }
 
-        public void HandleUiCoroutine(IEnumerator coroutine)
+        public async Task HandleUIOperation(Task uiOperation)
         {
-            StartCoroutine(CoroutineCaller(coroutine));
+            inputLocked = true;
+            await uiOperation;
+            inputLocked = false;
         }
+
         private void InitializeElements()
         {
             var elementSprites = LoadElements();
@@ -76,13 +77,6 @@ namespace ElementsBook
             }
         }
 
-        private IEnumerator CoroutineCaller(IEnumerator coroutine)
-        {
-            inputLocked = true;
-            yield return StartCoroutine(coroutine);
-            inputLocked = false;
-        }
-        
         private IEnumerable<Sprite> LoadElements()
         {
             var loadedSprites = Resources.LoadAll("Sprites/Elements", typeof(Sprite));

@@ -1,4 +1,4 @@
-using System.Collections;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -22,41 +22,42 @@ namespace ElementsBook
             _waitForSeconds = duration * 0.05f;
         }
 
-        public void ChangeElement(Sprite sprite)
+        public async Task ChangeElement(Sprite sprite)
         {
             _backImage.color = Color.clear;
             _elementImage.sprite = sprite;
             _elementImage.color = Color.white;
 
             IsEmpty = false;
-            GameManager.Instance.PerformMix();
+            await GameManager.Instance.PerformMix();
         }
 
-        public void OnPointerClick(PointerEventData eventData)
+        public async void OnPointerClick(PointerEventData eventData)
         {
             if (GameManager.Instance.CheckAndLockInput())
-                EraseElement();
+                await EraseElement();
         }
 
-        public void EraseElement()
+        public async Task EraseElement()
         {
             if (!IsEmpty)
             {
-                GameManager.Instance.HandleUiCoroutine(ClearElementCoroutine());
+                await GameManager.Instance.HandleUIOperation(ClearElement());
                 IsEmpty = true;
             }
         }
         
-        private IEnumerator ClearElementCoroutine()
+        private async Task ClearElement()
         {
             float t = 0;
+            var ms = (int)(_waitForSeconds * 1000);
 
             while (t <= 1)
             {
                 _elementImage.color = Color.Lerp(Color.white, Color.clear, t);
                 _backImage.color = Color.Lerp(Color.clear, Color.white, t);
                 t += 0.05f;
-                yield return new WaitForSeconds(_waitForSeconds);
+                await Task.Delay(ms);
             }
             
             _elementImage.color = Color.clear;
