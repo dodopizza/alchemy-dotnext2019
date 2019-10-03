@@ -7,8 +7,7 @@ namespace ElementsBook
     public class ElementItem : MonoBehaviour, IPointerClickHandler
     {
         public GameObject floatingElementPrefab;
-        
-        private GameObject _canvas;
+
         private Sprite _sprite;
         private Image _image;
 
@@ -18,22 +17,25 @@ namespace ElementsBook
             _image.sprite = _sprite;
         }
 
-        public void SetUp(GameObject canvas, Sprite sprite)
+        public void SetUp(Sprite sprite)
         {
-            _canvas = canvas;
             _sprite = sprite;
         }
 
-        public void OnPointerClick(PointerEventData eventData)
+        public async void OnPointerClick(PointerEventData eventData)
         {
             if (!GameManager.Instance.CheckAndLockInput()) 
                 return;
             
-            var floatingElement = Instantiate(floatingElementPrefab, _canvas.transform);
-            floatingElement.transform.position = _image.transform.position;
+            var mixElement = GameManager.Instance.GetMixElement();
 
-            floatingElement.GetComponent<FloatingElement>()
-                .SetUp(GameManager.Instance.GetMixElement(), _sprite);
+            await Instantiate(floatingElementPrefab, GameManager.Instance.CanvasTransform)
+                .GetComponent<FloatingElement>()
+                .Run(
+                    _image.transform.position,
+                    mixElement.transform.position,
+                    _sprite,
+                    () => mixElement.ChangeElement(_sprite));
         }
     }
 }

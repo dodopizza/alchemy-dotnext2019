@@ -16,17 +16,19 @@ namespace ElementsBook
 
         public static GameManager Instance => instance;
 
+        private bool _inputLocked;
+
         public bool CheckAndLockInput()
         {
-            if (inputLocked) 
+            if (_inputLocked) 
                 return false;
             
-            inputLocked = true;
+            _inputLocked = true;
             return true;
         }
-        
-        private bool inputLocked = false;
 
+        public Transform CanvasTransform => canvas.transform;
+        
         private static GameManager instance;
 
         private void Awake()
@@ -54,15 +56,26 @@ namespace ElementsBook
         {
             if (!mixElementOne.IsEmpty && !mixElementTwo.IsEmpty)
             {
-                await Task.WhenAll(mixElementOne.EraseElement(), mixElementTwo.EraseElement());
+                if (Random.Range(0, 2) == 1)
+                {
+                    await Task.WhenAll(mixElementOne.Mix(), mixElementTwo.Mix());
+
+                    var elements = LoadElements().ToArray();
+                    Instantiate(elementItemPrefab, elementsBook.transform)
+                        .GetComponent<ElementItem>()
+                        .SetUp(elements[Random.Range(0, elements.Length)]);
+                }
+                else
+                    await mixElementTwo.Erase();
+                //await Task.WhenAll(mixElementOne.Erase(), mixElementTwo.Erase());
             }
         }
 
-        public async Task HandleUIOperation(Task uiOperation)
+        public async Task HandleUiOperation(Task uiOperation)
         {
-            inputLocked = true;
+            _inputLocked = true;
             await uiOperation;
-            inputLocked = false;
+            _inputLocked = false;
         }
 
         private void InitializeElements()
@@ -71,9 +84,9 @@ namespace ElementsBook
 
             foreach (var sprite in elementSprites)
             {
-                var element = Instantiate(elementItemPrefab, elementsBook.transform);
-                element.GetComponent<ElementItem>()
-                    .SetUp(canvas, sprite);
+                Instantiate(elementItemPrefab, elementsBook.transform)
+                    .GetComponent<ElementItem>()
+                    .SetUp(sprite);
             }
         }
 

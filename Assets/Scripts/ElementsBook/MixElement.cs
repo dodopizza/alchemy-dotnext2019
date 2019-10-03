@@ -8,8 +8,9 @@ namespace ElementsBook
     public class MixElement : MonoBehaviour, IPointerClickHandler
     {
         public float duration = 1f;
+        public GameObject floatingElementPrefab;
+        public GameObject mixPoint;
 
-        private float _waitForSeconds;
         private Image _backImage;
         private Image _elementImage;
 
@@ -19,7 +20,6 @@ namespace ElementsBook
         {
             _backImage = transform.GetComponent<Image>();
             _elementImage = transform.GetChild(0).GetComponent<Image>();
-            _waitForSeconds = duration * 0.05f;
         }
 
         public async Task ChangeElement(Sprite sprite)
@@ -35,22 +35,30 @@ namespace ElementsBook
         public async void OnPointerClick(PointerEventData eventData)
         {
             if (GameManager.Instance.CheckAndLockInput())
-                await EraseElement();
+                await Erase();
         }
-
-        public async Task EraseElement()
+        
+        public async Task Erase()
         {
             if (!IsEmpty)
             {
-                await GameManager.Instance.HandleUIOperation(ClearElement());
+                await GameManager.Instance.HandleUiOperation(EraseElementAnimation());
                 IsEmpty = true;
             }
         }
+
+        public async Task Mix()
+        {
+            await MixAnimation();
+            IsEmpty = true;
+        }
         
-        private async Task ClearElement()
+        private async Task EraseElementAnimation()
         {
             float t = 0;
-            var ms = (int)(_waitForSeconds * 1000);
+            
+            var waitForSeconds = duration * 0.05f;
+            var ms = (int)(waitForSeconds * 1000);
 
             while (t <= 1)
             {
@@ -62,6 +70,20 @@ namespace ElementsBook
             
             _elementImage.color = Color.clear;
             _backImage.color = Color.white;
+        }
+
+        private async Task MixAnimation()
+        {
+            _elementImage.color = Color.clear;
+            _backImage.color = Color.white;
+
+            await Instantiate(floatingElementPrefab, GameManager.Instance.CanvasTransform)
+                .GetComponent<FloatingElement>()
+                .Run(
+                    _elementImage.transform.position,
+                    mixPoint.transform.position, 
+                    _elementImage.sprite, 
+                    null);
         }
     }
 }

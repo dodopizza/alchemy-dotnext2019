@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
@@ -8,33 +9,34 @@ namespace ElementsBook
     {
         public float duration = 1f;
 
-        private MixElement _mixElement;
-        private Sprite _sprite;
         private Vector3 _initialPosition;
         private Vector3 _finalPosition;
-        private float _waitForSeconds;
+        private Func<Task> _actionAfter;
 
-        public void SetUp(MixElement mixElement, Sprite sprite)
+        public async Task Run(
+            Vector3 initialPosition,
+            Vector3 finalPosition,
+            Sprite sprite,
+            Func<Task> actionAfter)
         {
-            _mixElement = mixElement;
-            _sprite = sprite;
-            transform.GetComponent<Image>().sprite = sprite;
-        }
-
-        private async void Start()
-        {
-            _initialPosition = transform.position;
-            _finalPosition = _mixElement.transform.position;
-            _waitForSeconds = duration * 0.05f;
+            _initialPosition = initialPosition;
+            _finalPosition = finalPosition;
             _finalPosition.z = _initialPosition.z;
 
-            await GameManager.Instance.HandleUIOperation(GoToMixPosition());
+            _actionAfter = actionAfter;
+
+            transform.position = _initialPosition;
+            transform.GetComponent<Image>().sprite = sprite;
+
+            await GameManager.Instance.HandleUiOperation(GoToMixPosition());
         }
 
         private async Task GoToMixPosition()
         {
             float t = 0;
-            var ms = (int)(_waitForSeconds * 1000);
+            
+            var waitForSeconds = duration * 0.05f;
+            var ms = (int)(waitForSeconds * 1000);
 
             while (t <= 1)
             {
@@ -43,7 +45,9 @@ namespace ElementsBook
                 await Task.Delay(ms);
             }
             Destroy(gameObject);
-            await _mixElement.ChangeElement(_sprite);
+
+            if (_actionAfter != null)
+                await _actionAfter();
         }
     }
 }
