@@ -1,30 +1,69 @@
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace ElementsBook
 {
     // todo: singleton
     public class GameManager : MonoBehaviour
     {
-        public GameObject mixElementOne;
-        public GameObject mixElementTwo;
+        public MixElement mixElementOne;
+        public MixElement mixElementTwo;
         public GameObject canvas;
         public GameObject elementItemPrefab;
         public GameObject elementsBook;
+
+        public static GameManager Instance => instance;
+
+        public bool CheckAndLockInput()
+        {
+            if (inputLocked) 
+                return false;
+            
+            inputLocked = true;
+            return true;
+        }
         
-        private int i = 0;
+        private bool inputLocked = false;
+
+        private static GameManager instance;
+
+        private void Awake()
+        {
+            if (instance)
+            {
+                DestroyImmediate(gameObject);
+                return;
+            }
+
+            instance = this;
+        }
 
         private void Start()
         {
             InitializeElements();
         }
 
-        public GameObject GetMixElement()
+        public MixElement GetMixElement()
         {
-            return i++ % 2 == 0 ? mixElementOne : mixElementTwo;
+            return mixElementOne.IsEmpty ? mixElementOne : mixElementTwo;
         }
 
+        public void PerformMix()
+        {
+            if (!mixElementOne.IsEmpty && !mixElementTwo.IsEmpty)
+            {
+                mixElementOne.EraseElement();
+                mixElementTwo.EraseElement();
+            }
+        }
+
+        public void HandleUiCoroutine(IEnumerator coroutine)
+        {
+            StartCoroutine(CoroutineCaller(coroutine));
+        }
         private void InitializeElements()
         {
             var elementSprites = LoadElements();
@@ -32,16 +71,21 @@ namespace ElementsBook
             foreach (var sprite in elementSprites)
             {
                 var element = Instantiate(elementItemPrefab, elementsBook.transform);
-                var elementScript = element.GetComponent<ElementItem>();
-                elementScript.Canvas = canvas;
-                elementScript.GameManager = this;
-                elementScript.Sprite = sprite;
+                element.GetComponent<ElementItem>()
+                    .SetUp(canvas, sprite);
             }
+        }
+
+        private IEnumerator CoroutineCaller(IEnumerator coroutine)
+        {
+            inputLocked = true;
+            yield return StartCoroutine(coroutine);
+            inputLocked = false;
         }
         
         private IEnumerable<Sprite> LoadElements()
         {
-            var loadedSprites = Resources.LoadAll("Sprites", typeof(Sprite));
+            var loadedSprites = Resources.LoadAll("Sprites/Elements", typeof(Sprite));
             return loadedSprites.Select(s => (Sprite) s);
         }
     }

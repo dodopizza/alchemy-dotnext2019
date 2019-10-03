@@ -6,28 +6,29 @@ namespace ElementsBook
 {
     public class FloatingElement : MonoBehaviour
     {
-        public GameObject mixElement;
         public float duration = 1f;
-        
-        public Image Image { get; private set; }
 
-        private Vector3 initialPosition;
-        private Vector3 finalPosition;
-        private float waitForSeconds;
+        private MixElement _mixElement;
+        private Sprite _sprite;
+        private Vector3 _initialPosition;
+        private Vector3 _finalPosition;
+        private float _waitForSeconds;
 
-        private void Awake()
+        public void SetUp(MixElement mixElement, Sprite sprite)
         {
-            Image = transform.GetComponent<Image>();
+            _mixElement = mixElement;
+            _sprite = sprite;
+            transform.GetComponent<Image>().sprite = sprite;
         }
 
         private void Start()
         {
-            initialPosition = transform.position;
-            finalPosition = mixElement.transform.position;
-            waitForSeconds = duration * 0.05f;
-            finalPosition.z = initialPosition.z;
+            _initialPosition = transform.position;
+            _finalPosition = _mixElement.transform.position;
+            _waitForSeconds = duration * 0.05f;
+            _finalPosition.z = _initialPosition.z;
             
-            StartCoroutine(GoToMixPosition());
+            GameManager.Instance.HandleUiCoroutine(GoToMixPosition());
         }
 
         private IEnumerator GoToMixPosition()
@@ -36,12 +37,12 @@ namespace ElementsBook
 
             while (t <= 1)
             {
-                transform.position = Vector3.Lerp(initialPosition, finalPosition, t);
+                transform.position = Vector3.Lerp(_initialPosition, _finalPosition, t);
                 t += 0.05f;
-                yield return new WaitForSeconds(waitForSeconds);
+                yield return new WaitForSeconds(_waitForSeconds);
             }
             
-            mixElement.GetComponent<Image>().sprite = Image.sprite;
+            _mixElement.ChangeElement(_sprite);
             Destroy(gameObject);
         }
     }
