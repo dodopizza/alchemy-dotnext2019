@@ -1,3 +1,4 @@
+using Domain;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -9,7 +10,7 @@ namespace ElementsBook
         public GameObject floatingElementPrefab;
 
         private Image _image;
-        private Domain.Element _element;
+        private Element _element;
 
         private void Start()
         {
@@ -19,7 +20,7 @@ namespace ElementsBook
             GetComponentInChildren<Text>().text = _element.Name;
         }
 
-        public void SetUp(Domain.Element element)
+        public void SetUp(Element element)
         {
             _element = element;
         }

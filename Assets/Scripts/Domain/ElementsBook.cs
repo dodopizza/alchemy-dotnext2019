@@ -17,7 +17,7 @@ namespace Domain
             LoadElements();
         }
 
-        public Element[] GetOpenedElements()
+        public IEnumerable<Element> GetOpenedElements()
         {
             return _openedElements.ToArray();
         }
@@ -52,12 +52,10 @@ namespace Domain
                 .Select(x =>
                 {
                     var a = x.Split(';');
-                    return new Element
-                    {
-                        Id = new Guid(a[0]),
-                        Sprite = (Sprite) Resources.Load($"Sprites/Elements/{a[1]}", typeof(Sprite)),
-                        Name = a[2],
-                    };
+                    return new Element(
+                        new Guid(a[0]),
+                        (Sprite) Resources.Load($"Sprites/Elements/{a[1]}", typeof(Sprite)),
+                        a[2]);
                 }));
 
 

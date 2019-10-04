@@ -14,7 +14,7 @@ namespace ElementsBook
         private IElementsBook _elementsBook;
         private IForge _forge;
         
-        public static GameManager Instance => instance;
+        public static GameManager Instance { get; private set; }
 
         private bool _inputLocked;
 
@@ -28,18 +28,16 @@ namespace ElementsBook
         }
 
         public Transform CanvasTransform => canvas.transform;
-        
-        private static GameManager instance;
 
         private void Awake()
         {
-            if (instance)
+            if (Instance)
             {
                 DestroyImmediate(gameObject);
                 return;
             }
 
-            instance = this;
+            Instance = this;
         }
 
         private void Start()
@@ -61,11 +59,11 @@ namespace ElementsBook
                 return;
             
             var mixResult = await resultTask;
-            if (mixResult.Success /*mixResult.NewlyCreated*/)
+            if (mixResult.Success /*mixResult.IsNewlyCreated*/)
             {
                 await Task.WhenAll(mixElementOne.Mix(), mixElementTwo.Mix());
 
-                if (mixResult.NewlyCreated)
+                if (mixResult.IsNewlyCreated)
                 {
                     AddNewElement(mixResult.Element);
                 }
@@ -103,6 +101,11 @@ namespace ElementsBook
         public void AddElementToForge(Element element)
         {
             _forge.AddElement(element);
+        }
+
+        public void ClearForge()
+        {
+            _forge.Clear();
         }
     }
 }

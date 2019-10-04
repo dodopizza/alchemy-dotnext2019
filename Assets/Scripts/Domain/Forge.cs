@@ -4,7 +4,7 @@ using Random = UnityEngine.Random;
 
 namespace Domain
 {
-    class Forge : IForge
+    internal class Forge : IForge
     {
         private Element _firstElement;
         private Task<MixResult> _getResultTask;
@@ -27,6 +27,12 @@ namespace Domain
             }
         }
 
+        public void Clear()
+        {
+            _firstElement = null;
+            _getResultTask = null;
+        }
+
         private Task<MixResult> MixElements(Element firstElement, Element secondElement)
         {
             if (Random.Range(0, 2) == 1)
@@ -36,7 +42,7 @@ namespace Domain
                 return Task.FromResult(new MixResult
                 {
                     Success = true,
-                    NewlyCreated = _book.TryOpenElement(elementId, out var element),
+                    IsNewlyCreated = _book.TryOpenElement(elementId, out var element),
                     Element = element
                 });
             }

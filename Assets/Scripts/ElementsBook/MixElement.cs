@@ -35,7 +35,10 @@ namespace ElementsBook
         public async void OnPointerClick(PointerEventData eventData)
         {
             if (GameManager.Instance.CheckAndLockInput())
+            {
+                GameManager.Instance.ClearForge();
                 await Erase();
+            }
         }
         
         public async Task Erase()
