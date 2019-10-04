@@ -36,7 +36,7 @@ namespace Domain
                 return Task.FromResult(new MixResult
                 {
                     Success = true,
-                    NewlyCreated = _book.ElementOpened(elementId),
+                    NewlyCreated = !_book.ElementOpened(elementId),
                     Element = _book.OpenAndGetElement(elementId)
                 });
                 

@@ -67,7 +67,7 @@ namespace ElementsBook
 
                 if (mixResult.NewlyCreated)
                 {
-                    // добавь элемент
+                    AddNewElement(mixResult.Element);
                 }
             }
             else
@@ -81,6 +81,13 @@ namespace ElementsBook
             _inputLocked = false;
         }
 
+        private void AddNewElement(Element element)
+        {
+            Instantiate(elementItemPrefab, elementsBook.transform)
+                .GetComponent<ElementItem>()
+                .SetUp(element);
+        }
+        
         private void InitializeElements()
         {
             var openedElements = _elementsBook.GetOpenedElements();
@@ -93,7 +100,7 @@ namespace ElementsBook
             }
         }
 
-        public void AddElement(Element element)
+        public void AddElementToForge(Element element)
         {
             _forge.AddElement(element);
         }

@@ -27,7 +27,7 @@ namespace ElementsBook
             if (!GameManager.Instance.CheckAndLockInput()) 
                 return;
 
-            GameManager.Instance.AddElement(_element);
+            GameManager.Instance.AddElementToForge(_element);
             
             var mixElement = GameManager.Instance.GetMixElement();
 

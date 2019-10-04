@@ -46,7 +46,7 @@ namespace Domain
             }));
             
             _openedElements.Clear();
-            _openedElements.AddRange(_elements);
+            _openedElements.AddRange(_elements.Skip(1));
         }
         
         private IEnumerable<Sprite> LoadSprites()
