@@ -22,7 +22,7 @@ namespace ElementsBook
             _elementImage = transform.GetChild(0).GetComponent<Image>();
         }
 
-        public async Task ChangeElement(Sprite sprite)
+        public async Task ChangeSprite(Sprite sprite)
         {
             _backImage.color = Color.clear;
             _elementImage.sprite = sprite;

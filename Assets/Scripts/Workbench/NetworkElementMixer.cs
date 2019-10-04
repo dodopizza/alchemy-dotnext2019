@@ -9,9 +9,9 @@ namespace Workbench
 {
     public class NetworkElementMixer : IElementMixer
     {
-        public Task<MixResult> MixElements(IEnumerable<ElementData> elementsData)
+        public Task<MixResultOld> MixElements(IEnumerable<ElementData> elementsData)
         {
-            var taskCompletionSource = new TaskCompletionSource<MixResult>();
+            var taskCompletionSource = new TaskCompletionSource<MixResultOld>();
 
             var mixRequest = new MixRequest
             {
@@ -28,7 +28,7 @@ namespace Workbench
                 try
                 {
                     // TODO Fail fast on 4xx/5xx responses
-                    var response = JsonUtility.FromJson<MixResult>(request.downloadHandler.text);
+                    var response = JsonUtility.FromJson<MixResultOld>(request.downloadHandler.text);
                     taskCompletionSource.TrySetResult(response);
                 }
                 catch (Exception e)

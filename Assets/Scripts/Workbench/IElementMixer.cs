@@ -5,6 +5,6 @@ namespace Workbench
 {
     public interface IElementMixer
     {
-        Task<MixResult> MixElements(IEnumerable<ElementData> elementsData);
+        Task<MixResultOld> MixElements(IEnumerable<ElementData> elementsData);
     }
 }

@@ -6,7 +6,7 @@ namespace Workbench
 {
     public class LocalElementMixer : IElementMixer
     {
-        public Task<MixResult> MixElements(IEnumerable<ElementData> elementsData)
+        public Task<MixResultOld> MixElements(IEnumerable<ElementData> elementsData)
         {
             if (!elementsData.Any())
             {
@@ -14,7 +14,7 @@ namespace Workbench
             }
 
             return Task.FromResult(
-                new MixResult
+                new MixResultOld
                 {
                     success = true,
                     result = new ElementData{}

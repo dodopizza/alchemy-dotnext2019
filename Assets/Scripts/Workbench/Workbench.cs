@@ -17,18 +17,18 @@ namespace Workbench
             _onMixSuccess = onMixSuccess;
         }
    
-        public void AddElement(ElementData elementData)
-        {
-            if (currentElements.Count >= elementsMaximum)
-            {
-                return;
-            }
-        
-            var elementObject = Instantiate(elementPrefabType, transform);
-            var element = elementObject.GetComponent<Element>();
-            element.Init(elementData);
-            currentElements.Add(element.elementData);
-        }
+//        public void AddElement(ElementData elementData)
+//        {
+//            if (currentElements.Count >= elementsMaximum)
+//            {
+//                return;
+//            }
+//        
+//            var elementObject = Instantiate(elementPrefabType, transform);
+//            var element = elementObject.GetComponent<Element>();
+//            element.Init(elementData);
+//            currentElements.Add(element.elementData);
+//        }
 
         public async void MixElements()
         {

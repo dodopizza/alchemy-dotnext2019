@@ -8,24 +8,26 @@ namespace ElementsBook
     {
         public GameObject floatingElementPrefab;
 
-        private Sprite _sprite;
         private Image _image;
+        private Domain.Element _element;
 
         private void Start()
         {
             _image = GetComponentInChildren<Image>();
-            _image.sprite = _sprite;
+            _image.sprite = _element.Sprite;
         }
 
-        public void SetUp(Sprite sprite)
+        public void SetUp(Domain.Element element)
         {
-            _sprite = sprite;
+            _element = element;
         }
-
+        
         public async void OnPointerClick(PointerEventData eventData)
         {
             if (!GameManager.Instance.CheckAndLockInput()) 
                 return;
+
+            GameManager.Instance.AddElement(_element);
             
             var mixElement = GameManager.Instance.GetMixElement();
 
@@ -34,8 +36,8 @@ namespace ElementsBook
                 .Run(
                     _image.transform.position,
                     mixElement.transform.position,
-                    _sprite,
-                    () => mixElement.ChangeElement(_sprite));
+                    _element.Sprite,
+                    () => mixElement.ChangeSprite(_element.Sprite));
         }
     }
 }

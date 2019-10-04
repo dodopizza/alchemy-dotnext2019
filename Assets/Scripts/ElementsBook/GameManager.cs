@@ -1,11 +1,9 @@
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
+using Domain;
 using UnityEngine;
 
 namespace ElementsBook
 {
-    // todo: singleton
     public class GameManager : MonoBehaviour
     {
         public MixElement mixElementOne;
@@ -13,7 +11,9 @@ namespace ElementsBook
         public GameObject canvas;
         public GameObject elementItemPrefab;
         public GameObject elementsBook;
-
+        private IElementsBook _elementsBook;
+        private IForge _forge;
+        
         public static GameManager Instance => instance;
 
         private bool _inputLocked;
@@ -44,6 +44,8 @@ namespace ElementsBook
 
         private void Start()
         {
+            _elementsBook = new Domain.ElementsBook();
+            _forge = new Forge(_elementsBook);
             InitializeElements();
         }
 
@@ -54,21 +56,22 @@ namespace ElementsBook
 
         public async Task PerformMix()
         {
-            if (!mixElementOne.IsEmpty && !mixElementTwo.IsEmpty)
+            var resultTask = _forge.GetMixResult();
+            if (resultTask == null)
+                return;
+            
+            var mixResult = await resultTask;
+            if (mixResult.Success /*mixResult.NewlyCreated*/)
             {
-                if (Random.Range(0, 2) == 1)
-                {
-                    await Task.WhenAll(mixElementOne.Mix(), mixElementTwo.Mix());
+                await Task.WhenAll(mixElementOne.Mix(), mixElementTwo.Mix());
 
-                    var elements = LoadElements().ToArray();
-                    Instantiate(elementItemPrefab, elementsBook.transform)
-                        .GetComponent<ElementItem>()
-                        .SetUp(elements[Random.Range(0, elements.Length)]);
+                if (mixResult.NewlyCreated)
+                {
+                    // добавь элемент
                 }
-                else
-                    await mixElementTwo.Erase();
-                //await Task.WhenAll(mixElementOne.Erase(), mixElementTwo.Erase());
             }
+            else
+                await mixElementTwo.Erase();
         }
 
         public async Task HandleUiOperation(Task uiOperation)
@@ -80,20 +83,19 @@ namespace ElementsBook
 
         private void InitializeElements()
         {
-            var elementSprites = LoadElements();
+            var openedElements = _elementsBook.GetOpenedElements();
 
-            foreach (var sprite in elementSprites)
+            foreach (var element in openedElements)
             {
                 Instantiate(elementItemPrefab, elementsBook.transform)
                     .GetComponent<ElementItem>()
-                    .SetUp(sprite);
+                    .SetUp(element);
             }
         }
 
-        private IEnumerable<Sprite> LoadElements()
+        public void AddElement(Element element)
         {
-            var loadedSprites = Resources.LoadAll("Sprites/Elements", typeof(Sprite));
-            return loadedSprites.Select(s => (Sprite) s);
+            _forge.AddElement(element);
         }
     }
 }
