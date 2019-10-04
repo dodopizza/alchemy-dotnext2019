@@ -15,6 +15,8 @@ namespace ElementsBook
         {
             _image = GetComponentInChildren<Image>();
             _image.sprite = _element.Sprite;
+
+            GetComponentInChildren<Text>().text = _element.Name;
         }
 
         public void SetUp(Domain.Element element)

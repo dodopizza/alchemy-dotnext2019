@@ -5,7 +5,8 @@ namespace Domain
 {
     public class Element
     {
-        public Sprite Sprite { get; set; }
         public Guid Id { get; set; }
+        public Sprite Sprite { get; set; }
+        public string Name { get; set; }
     }
 }

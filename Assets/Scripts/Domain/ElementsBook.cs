@@ -20,21 +20,20 @@ namespace Domain
             return _openedElements.ToArray();
         }
 
-        public Element OpenAndGetElement(Guid elementId)
+        public bool TryOpenElement(Guid elementId, out Element element)
         {
-            var element = _elements.First(); //e => e.Id == elementId);
+            // todo: переписать
+            element = _elements.First(); //e => e.Id == elementId);
+
+            var id = element.Id;
             
-            if (!ElementOpened(elementId))
+            if (_openedElements.All(x => x.Id != id))
             {
                 _openedElements.Add(element);
+                return true;
             }
 
-            return element;
-        }
-
-        public bool ElementOpened(Guid elementId)
-        {
-            return _openedElements.Any(x => x.Id == elementId);
+            return false;
         }
 
         private void LoadElements()
@@ -42,17 +41,19 @@ namespace Domain
             _elements.Clear();
             _elements.AddRange(LoadSprites().Select(s => new Element
             {
-                Sprite = s
+                Id = Guid.NewGuid(),
+                Sprite = s.sprite,
+                Name = s.name
             }));
             
             _openedElements.Clear();
             _openedElements.AddRange(_elements.Skip(1));
         }
         
-        private IEnumerable<Sprite> LoadSprites()
+        private IEnumerable<(Sprite sprite, string name)> LoadSprites()
         {
             var loadedSprites = Resources.LoadAll("Sprites/Elements", typeof(Sprite));
-            return loadedSprites.Select(s => (Sprite) s);
+            return loadedSprites.Select(s => ((Sprite) s, s.name));
         }
     }
 }

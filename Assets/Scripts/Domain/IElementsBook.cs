@@ -5,7 +5,6 @@ namespace Domain
     internal interface IElementsBook
     {
         Element[] GetOpenedElements();
-        Element OpenAndGetElement(Guid elementId);
-        bool ElementOpened(Guid elementId);
+        bool TryOpenElement(Guid elementId, out Element element);
     }
 }
