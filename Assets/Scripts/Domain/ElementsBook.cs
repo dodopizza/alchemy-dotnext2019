@@ -10,11 +10,13 @@ namespace Domain
         private readonly List<Element> _elements = new List<Element>();
         private readonly List<Element> _openedElements = new List<Element>();
 
+        const string key = "OpenedElements";
+
         public ElementsBook()
         {
             LoadElements();
         }
-        
+
         public Element[] GetOpenedElements()
         {
             return _openedElements.ToArray();
@@ -26,10 +28,15 @@ namespace Domain
             element = _elements.First(); //e => e.Id == elementId);
 
             var id = element.Id;
-            
+
             if (_openedElements.All(x => x.Id != id))
             {
                 _openedElements.Add(element);
+
+                var value = string.Join(";", _openedElements.Select(x => x.Id.ToString()));
+                PlayerPrefs.SetString(key, value);
+                PlayerPrefs.Save();
+
                 return true;
             }
 
@@ -39,17 +46,34 @@ namespace Domain
         private void LoadElements()
         {
             _elements.Clear();
-            _elements.AddRange(LoadSprites().Select(s => new Element
-            {
-                Id = Guid.NewGuid(),
-                Sprite = s.sprite,
-                Name = s.name
-            }));
-            
+            var elementsText = (TextAsset) Resources.Load("Elements");
+            _elements.AddRange(elementsText.text
+                .Split('\n')
+                .Select(x =>
+                {
+                    var a = x.Split(';');
+                    return new Element
+                    {
+                        Id = new Guid(a[0]),
+                        Sprite = (Sprite) Resources.Load($"Sprites/Elements/{a[1]}", typeof(Sprite)),
+                        Name = a[2],
+                    };
+                }));
+
+
             _openedElements.Clear();
-            _openedElements.AddRange(_elements.Skip(1));
+            if (PlayerPrefs.HasKey(key))
+            {
+                var openedElementsString = PlayerPrefs.GetString(key);
+                var openedElementsGuids = openedElementsString.Split(';').Select(x => new Guid(x));
+                _openedElements.AddRange(_elements.Where(x => openedElementsGuids.Contains(x.Id)));
+            }
+            else
+            {
+                _openedElements.AddRange(_elements.Skip(2).Take(5));
+            }
         }
-        
+
         private IEnumerable<(Sprite sprite, string name)> LoadSprites()
         {
             var loadedSprites = Resources.LoadAll("Sprites/Elements", typeof(Sprite));
