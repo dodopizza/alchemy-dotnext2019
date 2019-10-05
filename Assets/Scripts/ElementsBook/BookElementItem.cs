@@ -1,11 +1,11 @@
-using Domain;
+using Domain.Models;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace ElementsBook
 {
-    public class ElementItem : MonoBehaviour, IPointerClickHandler
+    public class BookElementItem : MonoBehaviour, IPointerClickHandler
     {
         public GameObject floatingElementPrefab;
 

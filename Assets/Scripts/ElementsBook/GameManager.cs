@@ -1,13 +1,14 @@
 using System.Threading.Tasks;
 using Domain;
+using Domain.Models;
 using UnityEngine;
 
 namespace ElementsBook
 {
     public class GameManager : MonoBehaviour
     {
-        public MixElement mixElementOne;
-        public MixElement mixElementTwo;
+        public ForgeSlot forgeSlotOne;
+        public ForgeSlot forgeSlotTwo;
         public GameObject canvas;
         public GameObject elementItemPrefab;
         public GameObject elementsBook;
@@ -43,13 +44,13 @@ namespace ElementsBook
         private void Start()
         {
             _receiptsBook = new ReceiptsBook();
-            _forge = new Forge(_receiptsBook, new DummyMixChecker());
+            _forge = new Forge(_receiptsBook, new NetworkMixChecker());
             InitializeElements();
         }
 
-        public MixElement GetMixElement()
+        public ForgeSlot GetMixElement()
         {
-            return mixElementOne.IsEmpty ? mixElementOne : mixElementTwo;
+            return forgeSlotOne.IsEmpty ? forgeSlotOne : forgeSlotTwo;
         }
 
         public async Task PerformMix()
@@ -61,7 +62,7 @@ namespace ElementsBook
             var mixResult = await resultTask;
             if (mixResult.IsSuccess /*mixResult.IsNewlyCreated*/)
             {
-                await Task.WhenAll(mixElementOne.Mix(), mixElementTwo.Mix());
+                await Task.WhenAll(forgeSlotOne.Mix(), forgeSlotTwo.Mix());
 
                 if (mixResult.IsNewlyCreated)
                 {
@@ -69,7 +70,7 @@ namespace ElementsBook
                 }
             }
             else
-                await mixElementTwo.Erase();
+                await forgeSlotTwo.Erase();
         }
 
         public async Task HandleUiOperation(Task uiOperation)
@@ -82,7 +83,7 @@ namespace ElementsBook
         private void AddNewElement(Element element)
         {
             Instantiate(elementItemPrefab, elementsBook.transform)
-                .GetComponent<ElementItem>()
+                .GetComponent<BookElementItem>()
                 .SetUp(element);
         }
         
@@ -93,7 +94,7 @@ namespace ElementsBook
             foreach (var element in openedElements)
             {
                 Instantiate(elementItemPrefab, elementsBook.transform)
-                    .GetComponent<ElementItem>()
+                    .GetComponent<BookElementItem>()
                     .SetUp(element);
             }
         }

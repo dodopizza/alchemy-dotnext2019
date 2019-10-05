@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace Domain
+namespace Domain.Models
 {
     public class Element
     {

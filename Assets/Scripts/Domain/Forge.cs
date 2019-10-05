@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using Domain.Models;
 
 namespace Domain
 {
@@ -36,16 +37,20 @@ namespace Domain
 
         private async Task<MixResult> MixElements(Guid firstId, Guid secondId)
         {
-            if (_book.TryGetPreviousResult(firstId, secondId, out var result))
+            if (_book.TryGetPreviousResult(firstId, secondId, out var findPreviousResult))
             {
-                return ReturnResult(result, false);
+                return ReturnResult(findPreviousResult, false);
             }
             
             var checkResult = await _mixChecker.Check(firstId, secondId);
 
-            return ReturnResult(
-                _book.SaveNewReceipt(firstId, secondId, checkResult.CreatedElementId, checkResult.IsSuccess), 
-                true);
+            var saveNewResult = _book.SaveNewReceipt(
+                firstId, 
+                secondId, 
+                checkResult.CreatedElementId, 
+                checkResult.IsSuccess);
+            
+            return ReturnResult(saveNewResult, true);
         }
 
         private MixResult ReturnResult(Element element, bool isNewlyCreated)

@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 namespace ElementsBook
 {
-    public class MixElement : MonoBehaviour, IPointerClickHandler
+    public class ForgeSlot : MonoBehaviour, IPointerClickHandler
     {
         public float duration = 1f;
         public GameObject floatingElementPrefab;
