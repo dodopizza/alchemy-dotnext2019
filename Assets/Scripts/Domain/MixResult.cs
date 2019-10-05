@@ -2,10 +2,27 @@ namespace Domain
 {
     class MixResult
     {
-        public bool Success { get; set; }
+        private MixResult(bool isSuccess, bool isNewlyCreated, Element element)
+        {
+            IsSuccess = isSuccess;
+            IsNewlyCreated = isNewlyCreated;
+            Element = element;
+        }
+
+        public bool IsSuccess { get; }
         
-        public bool IsNewlyCreated { get; set; }
+        public bool IsNewlyCreated { get; }
         
-        public Element Element { get; set; }
+        public Element Element { get; }
+
+        public static MixResult Success(bool isNewlyCreated, Element element)
+        {
+            return new MixResult(true, isNewlyCreated, element);
+        }
+
+        public static MixResult Fail()
+        {
+            return new MixResult(false, false, null);
+        }
     }
 }

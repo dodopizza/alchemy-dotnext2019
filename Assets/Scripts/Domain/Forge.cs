@@ -1,6 +1,4 @@
-using System;
 using System.Threading.Tasks;
-using Random = UnityEngine.Random;
 
 namespace Domain
 {
@@ -8,11 +6,13 @@ namespace Domain
     {
         private Element _firstElement;
         private Task<MixResult> _getResultTask;
-        private readonly IElementsBook _book;
+        private readonly IReceiptsBook _book;
+        private readonly IMixChecker _mixChecker;
 
-        public Forge(IElementsBook book)
+        public Forge(IReceiptsBook book, IMixChecker mixChecker)
         {
             _book = book;
+            _mixChecker = mixChecker;
         }
 
         public void AddElement(Element element)
@@ -33,24 +33,30 @@ namespace Domain
             _getResultTask = null;
         }
 
-        private Task<MixResult> MixElements(Element firstElement, Element secondElement)
+        private async Task<MixResult> MixElements(Element firstElement, Element secondElement)
         {
-            if (Random.Range(0, 2) == 1)
+            var previouslyOpenedElement = _book.TryGetPreviousResult(firstElement.Id, secondElement.Id);
+            
+            if (previouslyOpenedElement != null)
             {
                 _firstElement = null;
-                var elementId = Guid.NewGuid();
-                return Task.FromResult(new MixResult
-                {
-                    Success = true,
-                    IsNewlyCreated = _book.TryOpenElement(elementId, out var element),
-                    Element = element
-                });
+                return MixResult.Success(false, previouslyOpenedElement);
             }
 
-            return Task.FromResult(new MixResult
+            var checkResult = await _mixChecker.Check(firstElement.Id, secondElement.Id);
+
+            if (checkResult.IsSuccess)
             {
-                Success = false
-            });
+                var element = _book.SaveNewReceipt(
+                    firstElement.Id, 
+                    secondElement.Id, 
+                    checkResult.CreatedElementId);
+                
+                _firstElement = null;
+                return MixResult.Success(true, element);
+            }
+
+            return MixResult.Fail();
         }
 
         public Task<MixResult> GetMixResult()

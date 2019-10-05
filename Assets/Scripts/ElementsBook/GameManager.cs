@@ -11,7 +11,7 @@ namespace ElementsBook
         public GameObject canvas;
         public GameObject elementItemPrefab;
         public GameObject elementsBook;
-        private IElementsBook _elementsBook;
+        private IReceiptsBook _receiptsBook;
         private IForge _forge;
         
         public static GameManager Instance { get; private set; }
@@ -42,8 +42,8 @@ namespace ElementsBook
 
         private void Start()
         {
-            _elementsBook = new Domain.ElementsBook();
-            _forge = new Forge(_elementsBook);
+            _receiptsBook = new ReceiptsBook();
+            _forge = new Forge(_receiptsBook, new DummyMixChecker());
             InitializeElements();
         }
 
@@ -59,7 +59,7 @@ namespace ElementsBook
                 return;
             
             var mixResult = await resultTask;
-            if (mixResult.Success /*mixResult.IsNewlyCreated*/)
+            if (mixResult.IsSuccess /*mixResult.IsNewlyCreated*/)
             {
                 await Task.WhenAll(mixElementOne.Mix(), mixElementTwo.Mix());
 
@@ -88,7 +88,7 @@ namespace ElementsBook
         
         private void InitializeElements()
         {
-            var openedElements = _elementsBook.GetOpenedElements();
+            var openedElements = _receiptsBook.GetOpenedElements();
 
             foreach (var element in openedElements)
             {
