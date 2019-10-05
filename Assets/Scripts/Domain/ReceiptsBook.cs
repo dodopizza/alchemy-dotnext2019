@@ -10,6 +10,7 @@ namespace Domain
         private Dictionary<Guid, Element> _elements = new Dictionary<Guid, Element>();
         private readonly Dictionary<(Guid firstId, Guid secondId), Guid> _openedReceipts 
             = new Dictionary<(Guid firstId, Guid secondId), Guid>();
+        private readonly HashSet<(Guid, Guid)> _attempts = new HashSet<(Guid, Guid)>();
 
         const string key = "OpenedElements";
 
@@ -25,23 +26,33 @@ namespace Domain
             return _elements.Where(e => openedElementsIds.Contains(e.Key)).Select(e => e.Value);
         }
 
-        public Element SaveNewReceipt(Guid firstElementId, Guid secondElementId, Guid resultId)
+        public Element SaveNewReceipt(Guid firstElementId, Guid secondElementId, Guid resultId, bool success)
         {
-            _openedReceipts[(firstElementId, secondElementId)] = resultId;
-            _openedReceipts[(secondElementId, firstElementId)] = resultId;
+            _attempts.Add((firstElementId, secondElementId));
+            _attempts.Add((secondElementId, firstElementId));
             
-            // todo: save
-            return _elements[resultId];
-        }
-
-        public Element TryGetPreviousResult(Guid firstElementId, Guid secondElementId)
-        {
-            if (_openedReceipts.TryGetValue((firstElementId, secondElementId), out var resultId))
+            if (success)
             {
+                _openedReceipts[(firstElementId, secondElementId)] = resultId;
+                _openedReceipts[(secondElementId, firstElementId)] = resultId;
+
+                // todo: save
                 return _elements[resultId];
             }
 
             return null;
+        }
+
+        public bool TryGetPreviousResult(Guid firstElementId, Guid secondElementId, out Element element)
+        {
+            if (_openedReceipts.TryGetValue((firstElementId, secondElementId), out var resultId))
+            {
+                element = _elements[resultId];
+                return true;
+            }
+
+            element = null;
+            return _attempts.Contains((firstElementId, secondElementId));
         }
 
         private void LoadElements()

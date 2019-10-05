@@ -7,8 +7,8 @@ namespace Domain
     {
         IEnumerable<Element> GetOpenedElements();
         
-        Element SaveNewReceipt(Guid firstElementId, Guid secondElementId, Guid resultId);
+        Element SaveNewReceipt(Guid firstElementId, Guid secondElementId, Guid resultId, bool success);
         
-        Element TryGetPreviousResult(Guid firstElementId, Guid secondElementId);
+        bool TryGetPreviousResult(Guid firstElementId, Guid secondElementId, out Element element);
     }
 }

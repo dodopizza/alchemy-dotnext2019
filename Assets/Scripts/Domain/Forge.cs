@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 
 namespace Domain
@@ -23,7 +24,7 @@ namespace Domain
             }
             else
             {
-                _getResultTask = MixElements(_firstElement, element);
+                _getResultTask = MixElements(_firstElement.Id, element.Id);
             }
         }
 
@@ -33,29 +34,28 @@ namespace Domain
             _getResultTask = null;
         }
 
-        private async Task<MixResult> MixElements(Element firstElement, Element secondElement)
+        private async Task<MixResult> MixElements(Guid firstId, Guid secondId)
         {
-            var previouslyOpenedElement = _book.TryGetPreviousResult(firstElement.Id, secondElement.Id);
+            if (_book.TryGetPreviousResult(firstId, secondId, out var result))
+            {
+                return ReturnResult(result, false);
+            }
             
-            if (previouslyOpenedElement != null)
+            var checkResult = await _mixChecker.Check(firstId, secondId);
+
+            return ReturnResult(
+                _book.SaveNewReceipt(firstId, secondId, checkResult.CreatedElementId, checkResult.IsSuccess), 
+                true);
+        }
+
+        private MixResult ReturnResult(Element element, bool isNewlyCreated)
+        {
+            if (element != null)
             {
                 _firstElement = null;
-                return MixResult.Success(false, previouslyOpenedElement);
+                return MixResult.Success(isNewlyCreated, element);
             }
-
-            var checkResult = await _mixChecker.Check(firstElement.Id, secondElement.Id);
-
-            if (checkResult.IsSuccess)
-            {
-                var element = _book.SaveNewReceipt(
-                    firstElement.Id, 
-                    secondElement.Id, 
-                    checkResult.CreatedElementId);
-                
-                _firstElement = null;
-                return MixResult.Success(true, element);
-            }
-
+            
             return MixResult.Fail();
         }
 
