@@ -7,23 +7,20 @@ namespace Domain
 {
     internal class DummyMixChecker : IMixChecker
     {
-        public Task<CheckResult> Check(Guid firstElementId, Guid secondElementId)
+        public Task<OperationResult<CheckResult>> Check(Guid firstElementId, Guid secondElementId)
         {
             Debug.Log("Remote call!");
             if (UnityEngine.Random.Range(0, 2) == 1)
             {
-                return Task.FromResult(new CheckResult
-                {
-                    IsSuccess = true,
-                    CreatedElementId = Guid.Parse("959ba1ca-7239-4a42-8f30-b5de84396faa"),
-                    Scores = 10
-                });
+                return ReturnResult(CheckResult.Success("959ba1ca-7239-4a42-8f30-b5de84396faa", 10));
             }
 
-            return Task.FromResult(new CheckResult
-            {
-                IsSuccess = false
-            });
+            return ReturnResult(CheckResult.Failure());
+        }
+
+        private Task<OperationResult<CheckResult>> ReturnResult(CheckResult checkResult)
+        {
+            return Task.FromResult(OperationResult<CheckResult>.Success(checkResult));
         }
     }
 }

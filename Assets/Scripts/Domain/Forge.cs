@@ -42,15 +42,21 @@ namespace Domain
                 return ReturnResult(findPreviousResult, false);
             }
             
-            var checkResult = await _mixChecker.Check(firstId, secondId);
+            var operationResult = await _mixChecker.Check(firstId, secondId);
 
-            var saveNewResult = _book.SaveNewReceipt(
-                firstId, 
-                secondId, 
-                checkResult.CreatedElementId, 
-                checkResult.IsSuccess);
-            
-            return ReturnResult(saveNewResult, true);
+            if (operationResult.IsSuccess)
+            {
+                var checkResult = operationResult.Data;
+                var saveNewResult = _book.SaveNewReceipt(
+                    firstId,
+                    secondId,
+                    checkResult.CreatedElementId,
+                    checkResult.IsSuccess);
+
+                return ReturnResult(saveNewResult, true);
+            }
+            else
+                throw new InvalidOperationException("Что-то пошло не так");
         }
 
         private MixResult ReturnResult(Element element, bool isNewlyCreated)

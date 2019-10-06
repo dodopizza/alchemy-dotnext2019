@@ -8,7 +8,7 @@ namespace Domain
 {
     public class NetworkMixChecker : IMixChecker
     {
-        public async Task<CheckResult> Check(Guid firstElementId, Guid secondElementId)
+        public async Task<OperationResult<CheckResult>> Check(Guid firstElementId, Guid secondElementId)
         {
             var checkRequest = new CheckRequest
             {
@@ -26,16 +26,19 @@ namespace Domain
                 if (!request.isHttpError && !request.isNetworkError)
                 {
                     var intermediateResult = JsonUtility.FromJson<InternalCheckResult>(request.downloadHandler.text);
-                    return new CheckResult
+
+                    if (intermediateResult.isSuccess)
                     {
-                        IsSuccess = intermediateResult.isSuccess,
-                        CreatedElementId = Guid.Parse(intermediateResult.createdElementId),
-                        Scores = intermediateResult.scores
-                    };
+                        return OperationResult<CheckResult>.Success(
+                            CheckResult.Success(
+                                intermediateResult.createdElementId,
+                                intermediateResult.scores));
+                    }
+
+                    return OperationResult<CheckResult>.Success(CheckResult.Failure());
                 }
-                else
-                    throw new InvalidOperationException(request.error);
-                
+
+                return OperationResult<CheckResult>.Failure();
             }
         }
  

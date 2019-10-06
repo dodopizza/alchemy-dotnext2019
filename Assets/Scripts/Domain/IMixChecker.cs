@@ -6,6 +6,6 @@ namespace Domain
 {
     public interface IMixChecker
     {
-        Task<CheckResult> Check(Guid firstElementId, Guid secondElementId);
+        Task<OperationResult<CheckResult>> Check(Guid firstElementId, Guid secondElementId);
     }
 }
