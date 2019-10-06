@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using Domain.Models;
+using Unity.UNetWeaver;
 using UnityEngine;
 using Utils;
 
@@ -18,7 +19,7 @@ namespace Domain
             };
             
             //todo: retry
-            using (var request = HttpClient.CreateApiPostRequest(Constants.ApiUrl + "/api/Merge/test", checkRequest))
+            using (var request = HttpClient.CreateApiPostRequest(Constants.ApiUrl + "/api/Elements/test", checkRequest))
             {
                 request.timeout = Constants.RpcTimeoutSeconds;
                 
@@ -30,15 +31,18 @@ namespace Domain
 
                     if (intermediateResult.isSuccess)
                     {
+                        Debug.Log("Success");
                         return OperationResult<CheckResult>.Success(
                             CheckResult.Success(
                                 intermediateResult.createdElementId,
                                 intermediateResult.scores));
                     }
-
+                    
+                    Debug.Log("Fail");
                     return OperationResult<CheckResult>.Success(CheckResult.Failure());
                 }
 
+                Debug.Log($"Server error: {request.error}");
                 return OperationResult<CheckResult>.Failure();
             }
         }

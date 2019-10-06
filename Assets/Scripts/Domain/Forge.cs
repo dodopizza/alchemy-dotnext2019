@@ -47,13 +47,20 @@ namespace Domain
             if (operationResult.IsSuccess)
             {
                 var checkResult = operationResult.Data;
+                _book.SaveAttempt(firstId, secondId);
+
+                if (!checkResult.IsSuccess)
+                {
+                    return OperationResult<MixResult>.Success(MixResult.Fail());
+                }
+
                 var saveNewResult = _book.SaveNewReceipt(
                     firstId,
                     secondId,
                     checkResult.CreatedElementId,
-                    checkResult.IsSuccess);
+                    out var isNewlyCreated);
 
-                return OperationResult<MixResult>.Success(ReturnResult(saveNewResult, true));
+                return OperationResult<MixResult>.Success(ReturnResult(saveNewResult, isNewlyCreated));
             }
             
             return OperationResult<MixResult>.Failure();

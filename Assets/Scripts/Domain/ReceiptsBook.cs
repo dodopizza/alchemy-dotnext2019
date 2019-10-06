@@ -9,6 +9,7 @@ namespace Domain
     class ReceiptsBook : IReceiptsBook
     {
         private Dictionary<Guid, Element> _elements = new Dictionary<Guid, Element>();
+        private Dictionary<Guid, Element> _openedElements = new Dictionary<Guid, Element>();
         private readonly Dictionary<(Guid firstId, Guid secondId), Guid> _openedReceipts 
             = new Dictionary<(Guid firstId, Guid secondId), Guid>();
         private readonly HashSet<(Guid, Guid)> _attempts = new HashSet<(Guid, Guid)>();
@@ -22,26 +23,29 @@ namespace Domain
 
         public IEnumerable<Element> GetOpenedElements()
         {
-            var openedElementsIds = _openedReceipts.Values.Distinct();
+            return _openedElements.Values;
+        }
+        
+        public Element SaveNewReceipt(Guid firstElementId, Guid secondElementId, Guid resultId, out bool newlyCreated)
+        {
+            _openedReceipts[(firstElementId, secondElementId)] = resultId;
+            _openedReceipts[(secondElementId, firstElementId)] = resultId;
 
-            return _elements.Where(e => openedElementsIds.Contains(e.Key)).Select(e => e.Value);
+            var result = _elements[resultId];
+
+            newlyCreated = !_openedElements.ContainsKey(resultId); 
+            if (newlyCreated)
+            {
+                _openedElements[resultId] = result;
+            }
+            // todo: save
+            return result;
         }
 
-        public Element SaveNewReceipt(Guid firstElementId, Guid secondElementId, Guid resultId, bool success)
+        public void SaveAttempt(Guid firstElementId, Guid secondElementId)
         {
             _attempts.Add((firstElementId, secondElementId));
             _attempts.Add((secondElementId, firstElementId));
-            
-            if (success)
-            {
-                _openedReceipts[(firstElementId, secondElementId)] = resultId;
-                _openedReceipts[(secondElementId, firstElementId)] = resultId;
-
-                // todo: save
-                return _elements[resultId];
-            }
-
-            return null;
         }
 
         public bool TryGetPreviousResult(Guid firstElementId, Guid secondElementId, out Element element)
@@ -77,6 +81,7 @@ namespace Domain
             foreach (var element in elementsList.Skip(1).Take(4))
             {
                 _openedReceipts[(Guid.NewGuid(), Guid.NewGuid())] = element.Id;
+                _openedElements[element.Id] = element;
             }
         }
     }
