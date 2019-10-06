@@ -12,12 +12,13 @@ namespace Domain
         {
             var checkRequest = new CheckRequest
             {
-                FirstId = firstElementId.ToString(),
-                SecondId = secondElementId.ToString()
+                FirstElement = firstElementId.ToString(),
+                SecondElement = secondElementId.ToString(),
+                UserId = Guid.NewGuid().ToString()
             };
             
             //todo: retry
-            using (var request = HttpClient.CreateApiPostRequest(Constants.ApiUrl + "api/workbench", checkRequest))
+            using (var request = HttpClient.CreateApiPostRequest(Constants.ApiUrl + "/api/Merge/test", checkRequest))
             {
                 request.timeout = Constants.RpcTimeoutSeconds;
                 
@@ -44,9 +45,11 @@ namespace Domain
  
         private class CheckRequest
         {
-            public string FirstId;
+            public string FirstElement;
 
-            public string SecondId;
+            public string SecondElement;
+
+            public string UserId;
         }
 
         private class InternalCheckResult

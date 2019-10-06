@@ -61,7 +61,7 @@ namespace ElementsBook
             
             var operationResult = await resultTask;
             // todo: логика, когда что-то идёт не так
-            if (operationResult.IsSuccess /*mixResult.IsNewlyCreated*/)
+            if (operationResult.IsSuccess && operationResult.Data.IsSuccess /*mixResult.IsNewlyCreated*/)
             {
                 var mixResult = operationResult.Data;
                 await Task.WhenAll(forgeSlotOne.Mix(), forgeSlotTwo.Mix());
