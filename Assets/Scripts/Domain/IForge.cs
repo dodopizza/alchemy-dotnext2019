@@ -9,6 +9,6 @@ namespace Domain
 
         void Clear();
         
-        Task<MixResult> GetMixResult();
+        Task<OperationResult<MixResult>> GetMixResult();
     }
 }

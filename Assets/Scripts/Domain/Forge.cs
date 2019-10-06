@@ -7,7 +7,7 @@ namespace Domain
     internal class Forge : IForge
     {
         private Element _firstElement;
-        private Task<MixResult> _getResultTask;
+        private Task<OperationResult<MixResult>> _getResultTask;
         private readonly IReceiptsBook _book;
         private readonly IMixChecker _mixChecker;
 
@@ -35,11 +35,11 @@ namespace Domain
             _getResultTask = null;
         }
 
-        private async Task<MixResult> MixElements(Guid firstId, Guid secondId)
+        private async Task<OperationResult<MixResult>> MixElements(Guid firstId, Guid secondId)
         {
             if (_book.TryGetPreviousResult(firstId, secondId, out var findPreviousResult))
             {
-                return ReturnResult(findPreviousResult, false);
+                return OperationResult<MixResult>.Success(ReturnResult(findPreviousResult, false));
             }
             
             var operationResult = await _mixChecker.Check(firstId, secondId);
@@ -53,10 +53,10 @@ namespace Domain
                     checkResult.CreatedElementId,
                     checkResult.IsSuccess);
 
-                return ReturnResult(saveNewResult, true);
+                return OperationResult<MixResult>.Success(ReturnResult(saveNewResult, true));
             }
-            else
-                throw new InvalidOperationException("Что-то пошло не так");
+            
+            return OperationResult<MixResult>.Failure();
         }
 
         private MixResult ReturnResult(Element element, bool isNewlyCreated)
@@ -70,7 +70,7 @@ namespace Domain
             return MixResult.Fail();
         }
 
-        public Task<MixResult> GetMixResult()
+        public Task<OperationResult<MixResult>> GetMixResult()
         {
             var result = _getResultTask;
             _getResultTask = null;
