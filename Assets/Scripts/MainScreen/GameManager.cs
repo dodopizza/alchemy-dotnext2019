@@ -12,6 +12,8 @@ namespace MainScreen
         public GameObject canvas;
         public GameObject elementItemPrefab;
         public GameObject elementsBook;
+        public ModalWindow modalWindow;
+        
         private IReceiptsBook _receiptsBook;
         private IForge _forge;
         
@@ -61,18 +63,30 @@ namespace MainScreen
             
             var operationResult = await resultTask;
             // todo: логика, когда что-то идёт не так
-            if (operationResult.IsSuccess && operationResult.Data.IsSuccess /*mixResult.IsNewlyCreated*/)
+
+            if (operationResult.IsSuccess)
             {
                 var mixResult = operationResult.Data;
-                await Task.WhenAll(forgeSlotOne.Mix(), forgeSlotTwo.Mix());
-
-                if (mixResult.IsNewlyCreated)
+                if (mixResult.IsSuccess)
                 {
-                    AddNewElement(mixResult.Element);
+                    await Task.WhenAll(forgeSlotOne.Mix(), forgeSlotTwo.Mix());
+
+                    if (mixResult.IsNewlyCreated)
+                    {
+                        modalWindow.Show(mixResult.Element.Sprite, $"Вы собрали {mixResult.Element.Name}!");
+                        AddNewElement(mixResult.Element);
+                    }
+                }
+                else
+                {
+                    await forgeSlotTwo.Erase();
                 }
             }
             else
+            {
+                modalWindow.Show(null, "Что-то пошло не так!");
                 await forgeSlotTwo.Erase();
+            }
         }
 
         public async Task HandleUiOperation(Task uiOperation)
