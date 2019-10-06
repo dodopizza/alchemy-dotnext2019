@@ -3,7 +3,7 @@ using Domain;
 using Domain.Models;
 using UnityEngine;
 
-namespace ElementsBook
+namespace MainScreen
 {
     public class GameManager : MonoBehaviour
     {

@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-namespace ElementsBook
+namespace MainScreen
 {
     public class BookElementItem : MonoBehaviour, IPointerClickHandler
     {
