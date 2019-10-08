@@ -76,7 +76,7 @@ namespace MainScreen
 
                     if (mixResult.IsNewlyCreated)
                     {
-                        modalWindow.Show(mixResult.Element.Sprite, $"Вы собрали {mixResult.Element.Name}!");
+                        await modalWindow.Show(mixResult.Element.Sprite, $"Вы собрали {mixResult.Element.Name}!");
                         AddNewElement(mixResult.Element);
                     }
                 }
@@ -87,8 +87,8 @@ namespace MainScreen
             }
             else
             {
-                modalWindow.Show(null, "Что-то пошло не так!");
-                await forgeSlotTwo.Erase();
+                await modalWindow.Show(null, "Что-то пошло не так!");
+                forgeSlotTwo.Erase();
             }
         }
 
