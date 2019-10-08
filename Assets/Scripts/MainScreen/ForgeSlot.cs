@@ -37,7 +37,7 @@ namespace MainScreen
             if (GameManager.Instance.CheckAndLockInput())
             {
                 GameManager.Instance.ClearForge();
-                await Erase();
+                await GameManager.Instance.HandleUiOperation(Erase());
             }
         }
         
@@ -45,7 +45,7 @@ namespace MainScreen
         {
             if (!IsEmpty)
             {
-                await GameManager.Instance.HandleUiOperation(EraseElementAnimation());
+                await EraseElementAnimation();
                 IsEmpty = true;
             }
         }

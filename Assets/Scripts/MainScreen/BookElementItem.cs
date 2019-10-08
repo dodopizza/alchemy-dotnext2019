@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using Domain.Models;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -5,7 +6,7 @@ using UnityEngine.UI;
 
 namespace MainScreen
 {
-    public class BookElementItem : MonoBehaviour, IPointerClickHandler
+    public class BookElementItem : MonoBehaviour, IPointerDownHandler
     {
         public GameObject floatingElementPrefab;
 
@@ -24,8 +25,8 @@ namespace MainScreen
         {
             _element = element;
         }
-        
-        public async void OnPointerClick(PointerEventData eventData)
+
+        public async void OnPointerDown(PointerEventData eventData)
         {
             if (!GameManager.Instance.CheckAndLockInput()) 
                 return;
@@ -34,7 +35,12 @@ namespace MainScreen
             
             var mixElement = GameManager.Instance.GetMixElement();
 
-            await Instantiate(floatingElementPrefab, GameManager.Instance.CanvasTransform)
+            await GameManager.Instance.HandleUiOperation(SendElementToForge(mixElement));
+        }
+        
+        private Task SendElementToForge(ForgeSlot mixElement)
+        {
+            return Instantiate(floatingElementPrefab, GameManager.Instance.CanvasTransform)
                 .GetComponent<FloatingElement>()
                 .Run(
                     _image.transform.position,

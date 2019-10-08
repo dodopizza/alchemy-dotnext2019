@@ -28,7 +28,7 @@ namespace MainScreen
             transform.position = _initialPosition;
             transform.GetComponent<Image>().sprite = sprite;
 
-            await GameManager.Instance.HandleUiOperation(GoToMixPosition());
+            await GoToMixPosition();
         }
 
         private async Task GoToMixPosition()
