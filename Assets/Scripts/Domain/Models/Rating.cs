@@ -2,14 +2,14 @@ namespace Domain.Models
 {
 	public class Rating
 	{
-		public Rating(RatingEntry[] top, RatingEntry own)
+		public Rating(RatingEntry[] top, int ownRating)
 		{
 			Top = top;
-			Own = own;
+			OwnRatingRating = ownRating;
 		}
 
 		public RatingEntry[] Top { get; }
-		public RatingEntry Own { get; }
+		public int OwnRatingRating { get; }
 	}
 
 	public class RatingEntry
