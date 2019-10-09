@@ -7,45 +7,66 @@ using UnityEngine.UI;
 
 namespace RatingScreen
 {
-	public class RatingManager : MonoBehaviour
-	{
-		public GameObject canvas;
-		public GameObject ratingPrefab;
+    public class RatingManager : MonoBehaviour
+    {
+        public GameObject canvas;
+        public GameObject ratingPrefab;
+        
+        // Start is called before the first frame update
+        void Start()
+        {
+            var ratingFetcher = new DummyRatingFetcher();
 
-		// Start is called before the first frame update
-		async Task Start()
-		{
-			var ratingFetcher = new DummyRatingFetcher();
-			
-			try
-			{
-				var result = await ratingFetcher.GetRating();
+            ratingFetcher.GetRating()
+                .ContinueWith(task =>
+                {
+                    if (task.IsCanceled)
+                    {
+                        // TODO error
+                    }
 
-				if (!result.IsSuccess)
-				{
-					// TODO error
-				}
+                    if (task.IsFaulted)
+                    {
+                        // TODO error
+                    }
+                    
+                    var result = task.Result;
 
-				RenderRatings(result.Data.Top);
-			}
-			catch (Exception e)
-			{
-				// TODO error
-			}
-		}
+                    if (!result.IsSuccess)
+                    {
+                        // TODO error
+                    }
+                    
+                    RenderRatings(result.Data.Top);
+                }, TaskScheduler.FromCurrentSynchronizationContext());
+        }
+        
+        void RenderRatings(RatingEntry[] ratings)
+        {
+            foreach (var entry in ratings)
+            {
+                
+                Debug.Log($"{entry.Nickname}: {entry.Rating}");
 
-		void RenderRatings(RatingEntry[] ratings)
-		{
-			foreach (var entry in ratings)
-			{
-				Instantiate(ratingPrefab, canvas.transform).GetComponent<Text>().text =
-					$"{entry.Nickname}: {entry.Rating}";
-			}
-		}
+                try
+                {
+                    Instantiate(ratingPrefab, canvas.transform).GetComponent<Text>().text = $"{entry.Nickname}: {entry.Rating}";
+                }
+                catch (Exception e)
+                {
+                    Debug.Log(e);
+                    throw;
+                }
+                
+                
+                
+            }
+        }
 
-		// Update is called once per frame
-		void Update()
-		{
-		}
-	}
+        // Update is called once per frame
+        void Update()
+        {
+        
+        }
+    }
 }
