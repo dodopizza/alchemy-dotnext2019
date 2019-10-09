@@ -5,6 +5,7 @@ namespace Domain
 {
 	public interface IRatingFetcher
 	{
-		Task<OperationResult<Rating>> GetRating();
+		Task<OperationResult<RatingEntry[]>> GetTopRating();
+		Task<OperationResult<RatingEntry>> GetMyRating();
 	}
 }

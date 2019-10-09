@@ -1,26 +1,16 @@
 namespace Domain.Models
 {
-	public class Rating
-	{
-		public Rating(RatingEntry[] top, int ownRating)
-		{
-			Top = top;
-			OwnRatingRating = ownRating;
-		}
-
-		public RatingEntry[] Top { get; }
-		public int OwnRatingRating { get; }
-	}
-
 	public class RatingEntry
 	{
-		public RatingEntry(string nickname, int rating)
+		public RatingEntry(string nickname, int rating, int position)
 		{
 			Nickname = nickname;
 			Rating = rating;
+			Position = position;
 		}
 		
 		public string Nickname { get; }
 		public int Rating { get; }
+		public int Position { get; }
 	}
 }

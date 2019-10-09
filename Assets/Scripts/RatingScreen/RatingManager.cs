@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Domain;
 using Domain.Models;
@@ -7,66 +9,100 @@ using UnityEngine.UI;
 
 namespace RatingScreen
 {
-    public class RatingManager : MonoBehaviour
-    {
-        public GameObject canvas;
-        public GameObject ratingPrefab;
-        
-        // Start is called before the first frame update
-        void Start()
-        {
-            var ratingFetcher = new DummyRatingFetcher();
+	public class RatingManager : MonoBehaviour
+	{
+		public GameObject canvas;
+		public GameObject ratingPrefab;
 
-            ratingFetcher.GetRating()
-                .ContinueWith(task =>
-                {
-                    if (task.IsCanceled)
-                    {
-                        // TODO error
-                    }
+		// Start is called before the first frame update
+		void Start()
+		{
+			var ratingFetcher = new DummyRatingFetcher();
 
-                    if (task.IsFaulted)
-                    {
-                        // TODO error
-                    }
-                    
-                    var result = task.Result;
+			var topRatingTask = ratingFetcher.GetTopRating();
+			var myRatingTask = ratingFetcher.GetMyRating();
 
-                    if (!result.IsSuccess)
-                    {
-                        // TODO error
-                    }
-                    
-                    RenderRatings(result.Data.Top);
-                }, TaskScheduler.FromCurrentSynchronizationContext());
-        }
-        
-        void RenderRatings(RatingEntry[] ratings)
-        {
-            foreach (var entry in ratings)
-            {
-                
-                Debug.Log($"{entry.Nickname}: {entry.Rating}");
+			Task.WhenAll(
+				topRatingTask,
+				myRatingTask
+			).ContinueWith(_ =>
+			{
+				if (topRatingTask.IsCanceled
+				    || topRatingTask.IsFaulted
+				    || myRatingTask.IsCanceled
+				    || myRatingTask.IsFaulted)
+				{
+					// TODO error
+				}
 
-                try
-                {
-                    Instantiate(ratingPrefab, canvas.transform).GetComponent<Text>().text = $"{entry.Nickname}: {entry.Rating}";
-                }
-                catch (Exception e)
-                {
-                    Debug.Log(e);
-                    throw;
-                }
-                
-                
-                
-            }
-        }
+				var topRatingResult = topRatingTask.Result;
+				var myRatingResult = myRatingTask.Result;
 
-        // Update is called once per frame
-        void Update()
-        {
-        
-        }
-    }
+				if (!topRatingResult.IsSuccess || !myRatingResult.IsSuccess)
+				{
+					// TODO error
+				}
+
+				RenderRatings(topRatingResult.Data, myRatingResult.Data);
+			}, TaskScheduler.FromCurrentSynchronizationContext());
+			
+			ratingFetcher.GetTopRating()
+				.ContinueWith(task =>
+				{
+					
+				}, TaskScheduler.FromCurrentSynchronizationContext());
+		}
+
+		void RenderRatings(RatingEntry[] top, RatingEntry own)
+		{
+			// re-sort just in case
+			var orderedRatings = top.OrderBy(x => x.Position).ToArray();
+
+			var lastPositionOfTop = orderedRatings.Last().Position;
+
+			if (own.Position <= lastPositionOfTop)
+			{
+				// player is in top: just render top
+				foreach (var entry in orderedRatings)
+				{
+					Instantiate(ratingPrefab, canvas.transform).GetComponent<Text>().text =
+						$"{entry.Position}. {(entry.Position == own.Position ? "You" : entry.Nickname)}: {entry.Rating}";
+				}
+
+				return;
+			}
+			
+			if (own.Position == lastPositionOfTop + 1)
+			{
+				// player is right after the top: render player after top
+				foreach (var entry in orderedRatings)
+				{
+					Instantiate(ratingPrefab, canvas.transform).GetComponent<Text>().text =
+						$"{entry.Position}. {entry.Nickname}: {entry.Rating}";
+				}
+				
+				Instantiate(ratingPrefab, canvas.transform).GetComponent<Text>().text = $"{own.Position}. You: {own.Rating}";
+				
+				return;
+			}
+				
+			// player is way outside of top: render three dots and player after
+			
+			foreach (var entry in orderedRatings)
+			{
+				Instantiate(ratingPrefab, canvas.transform).GetComponent<Text>().text =
+					$"{entry.Position}. {entry.Nickname}: {entry.Rating}";
+			}
+			Instantiate(ratingPrefab, canvas.transform).GetComponent<Text>().text = $"...";
+			Instantiate(ratingPrefab, canvas.transform).GetComponent<Text>().text = $"{own.Position}. You: {own.Rating}";
+
+			
+		}
+
+
+		// Update is called once per frame
+		void Update()
+		{
+		}
+	}
 }
