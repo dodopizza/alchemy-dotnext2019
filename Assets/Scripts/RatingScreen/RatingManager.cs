@@ -13,6 +13,7 @@ namespace RatingScreen
 	{
 		public GameObject canvas;
 		public GameObject ratingPrefab;
+		public GameObject threeDotsPrefab;
 
 		// Start is called before the first frame update
 		void Start()
@@ -53,7 +54,7 @@ namespace RatingScreen
 				}, TaskScheduler.FromCurrentSynchronizationContext());
 		}
 
-		void RenderRatings(RatingEntry[] top, RatingEntry own)
+		void RenderRatings(Domain.Models.RatingEntry[] top, Domain.Models.RatingEntry own)
 		{
 			// re-sort just in case
 			var orderedRatings = top.OrderBy(x => x.Position).ToArray();
@@ -65,8 +66,7 @@ namespace RatingScreen
 				// player is in top: just render top
 				foreach (var entry in orderedRatings)
 				{
-					Instantiate(ratingPrefab, canvas.transform).GetComponent<Text>().text =
-						$"{entry.Position}. {(entry.Position == own.Position ? "You" : entry.Nickname)}: {entry.Rating}";
+					Instantiate(ratingPrefab, canvas.transform).GetComponent<RatingEntry>().Setup(entry, entry.Position == own.Position);
 				}
 
 				return;
@@ -77,11 +77,10 @@ namespace RatingScreen
 				// player is right after the top: render player after top
 				foreach (var entry in orderedRatings)
 				{
-					Instantiate(ratingPrefab, canvas.transform).GetComponent<Text>().text =
-						$"{entry.Position}. {entry.Nickname}: {entry.Rating}";
+					Instantiate(ratingPrefab, canvas.transform).GetComponent<RatingEntry>().Setup(entry, false);
 				}
 				
-				Instantiate(ratingPrefab, canvas.transform).GetComponent<Text>().text = $"{own.Position}. You: {own.Rating}";
+				Instantiate(ratingPrefab, canvas.transform).GetComponent<RatingEntry>().Setup(own, true);
 				
 				return;
 			}
@@ -90,13 +89,12 @@ namespace RatingScreen
 			
 			foreach (var entry in orderedRatings)
 			{
-				Instantiate(ratingPrefab, canvas.transform).GetComponent<Text>().text =
-					$"{entry.Position}. {entry.Nickname}: {entry.Rating}";
+				Instantiate(ratingPrefab, canvas.transform).GetComponent<RatingEntry>().Setup(entry, false);
 			}
-			Instantiate(ratingPrefab, canvas.transform).GetComponent<Text>().text = $"...";
-			Instantiate(ratingPrefab, canvas.transform).GetComponent<Text>().text = $"{own.Position}. You: {own.Rating}";
 
-			
+			Instantiate(threeDotsPrefab, canvas.transform);
+				
+			Instantiate(ratingPrefab, canvas.transform).GetComponent<RatingEntry>().Setup(own, true);
 		}
 
 

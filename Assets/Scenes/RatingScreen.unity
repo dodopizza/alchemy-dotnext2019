@@ -263,7 +263,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   canvas: {fileID: 980847441}
-  ratingPrefab: {fileID: 5393681937114135125, guid: 09c5ee22af5edc14c9a2c66fe81c068a,
+  ratingPrefab: {fileID: 4304893968116050519, guid: 9b7bd4458aee85d4885ece3f552edb11,
     type: 3}
 --- !u!1 &980847441
 GameObject:
@@ -341,7 +341,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 0.392}
+  m_Color: {r: 0, g: 0, b: 0, a: 0}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:

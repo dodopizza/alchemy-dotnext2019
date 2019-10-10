@@ -5,7 +5,7 @@ namespace Domain
 {
 	public interface IRatingFetcher
 	{
-		Task<OperationResult<RatingEntry[]>> GetTopRating();
-		Task<OperationResult<RatingEntry>> GetMyRating();
+		Task<OperationResult<Models.RatingEntry[]>> GetTopRating();
+		Task<OperationResult<Models.RatingEntry>> GetMyRating();
 	}
 }
