@@ -263,7 +263,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   canvas: {fileID: 980847441}
-  ratingPrefab: {fileID: 4304893968116050519, guid: 9b7bd4458aee85d4885ece3f552edb11,
+  ratingPrefab: {fileID: 1928930621645061190, guid: 2b243583dd8adf4489bb59e67b33119c,
+    type: 3}
+  threeDotsPrefab: {fileID: 3474865797206012732, guid: 8528bcca0c71a8941a62a36ef205b62d,
     type: 3}
 --- !u!1 &980847441
 GameObject:
