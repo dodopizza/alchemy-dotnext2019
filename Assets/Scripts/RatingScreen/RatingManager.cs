@@ -46,12 +46,6 @@ namespace RatingScreen
 
 				RenderRatings(topRatingResult.Data, myRatingResult.Data);
 			}, TaskScheduler.FromCurrentSynchronizationContext());
-			
-			ratingFetcher.GetTopRating()
-				.ContinueWith(task =>
-				{
-					
-				}, TaskScheduler.FromCurrentSynchronizationContext());
 		}
 
 		void RenderRatings(Domain.Models.RatingEntry[] top, Domain.Models.RatingEntry own)
@@ -64,37 +58,50 @@ namespace RatingScreen
 			if (own.Position <= lastPositionOfTop)
 			{
 				// player is in top: just render top
-				foreach (var entry in orderedRatings)
-				{
-					Instantiate(ratingPrefab, canvas.transform).GetComponent<RatingEntry>().Setup(entry, entry.Position == own.Position);
-				}
-
-				return;
+				RenderPlayerInTop(own, orderedRatings);
 			}
-			
-			if (own.Position == lastPositionOfTop + 1)
+			else if (own.Position == lastPositionOfTop + 1)
 			{
 				// player is right after the top: render player after top
-				foreach (var entry in orderedRatings)
-				{
-					Instantiate(ratingPrefab, canvas.transform).GetComponent<RatingEntry>().Setup(entry, false);
-				}
-				
-				Instantiate(ratingPrefab, canvas.transform).GetComponent<RatingEntry>().Setup(own, true);
-				
-				return;
+				RenderPlayerRightAfterTop(own, orderedRatings);
 			}
-				
-			// player is way outside of top: render three dots and player after
-			
+			else
+			{
+				// player is way outside of top: render three dots and player after
+				RenderPlayerWayOutOfTop(own, orderedRatings);
+			}
+		}
+
+		private void RenderPlayerWayOutOfTop(Domain.Models.RatingEntry own, Domain.Models.RatingEntry[] orderedRatings)
+		{
 			foreach (var entry in orderedRatings)
 			{
 				Instantiate(ratingPrefab, canvas.transform).GetComponent<RatingEntry>().Setup(entry, false);
 			}
 
 			Instantiate(threeDotsPrefab, canvas.transform);
-				
+
 			Instantiate(ratingPrefab, canvas.transform).GetComponent<RatingEntry>().Setup(own, true);
+		}
+
+		private void RenderPlayerRightAfterTop(Domain.Models.RatingEntry own,
+			Domain.Models.RatingEntry[] orderedRatings)
+		{
+			foreach (var entry in orderedRatings)
+			{
+				Instantiate(ratingPrefab, canvas.transform).GetComponent<RatingEntry>().Setup(entry, false);
+			}
+
+			Instantiate(ratingPrefab, canvas.transform).GetComponent<RatingEntry>().Setup(own, true);
+		}
+
+		private void RenderPlayerInTop(Domain.Models.RatingEntry own, Domain.Models.RatingEntry[] orderedRatings)
+		{
+			foreach (var entry in orderedRatings)
+			{
+				Instantiate(ratingPrefab, canvas.transform).GetComponent<RatingEntry>()
+					.Setup(entry, entry.Position == own.Position);
+			}
 		}
 
 
