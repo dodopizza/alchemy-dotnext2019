@@ -54,7 +54,7 @@ namespace Domain
                     return OperationResult<MixResult>.Success(MixResult.Fail());
                 }
 
-                var saveNewResult = _book.SaveNewReceipt(
+                var saveNewResult = _book.SaveNewRecipe(
                     firstId,
                     secondId,
                     checkResult.CreatedElementId,

@@ -8,7 +8,7 @@ namespace Domain
     {
         IEnumerable<Element> GetOpenedElements();
         
-        Element SaveNewReceipt(Guid firstElementId, Guid secondElementId, Guid resultId, out bool newlyCreated);
+        Element SaveNewRecipe(Guid firstElementId, Guid secondElementId, Guid resultId, out bool newlyCreated);
 
         void SaveAttempt(Guid firstElementId, Guid secondElementId);
         

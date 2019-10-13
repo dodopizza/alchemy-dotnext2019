@@ -1,6 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.Threading.Tasks;
 using Domain.Models;
 using UnityEngine;
 
@@ -9,13 +12,16 @@ namespace Domain
     class ReceiptsBook : IReceiptsBook
     {
         private Dictionary<Guid, Element> _elements = new Dictionary<Guid, Element>();
-        private Dictionary<Guid, Element> _openedElements = new Dictionary<Guid, Element>();
-        private readonly Dictionary<(Guid firstId, Guid secondId), Guid> _openedReceipts 
+        private readonly Dictionary<Guid, Element> _openedElements = new Dictionary<Guid, Element>();
+        private Dictionary<(Guid firstId, Guid secondId), Guid> _openedRecipes 
             = new Dictionary<(Guid firstId, Guid secondId), Guid>();
-        private readonly HashSet<(Guid, Guid)> _attempts = new HashSet<(Guid, Guid)>();
+        private HashSet<(Guid, Guid)> _attempts = new HashSet<(Guid, Guid)>();
+
+        private const string AttemptsFileName = "attempts.bin";
+        private const string OpenedRecipesFileName = "openedRecipes.bin";
 
         const string key = "OpenedElements";
-
+        
         public ReceiptsBook()
         {
             LoadElements();
@@ -26,10 +32,10 @@ namespace Domain
             return _openedElements.Values;
         }
         
-        public Element SaveNewReceipt(Guid firstElementId, Guid secondElementId, Guid resultId, out bool newlyCreated)
+        public Element SaveNewRecipe(Guid firstElementId, Guid secondElementId, Guid resultId, out bool newlyCreated)
         {
-            _openedReceipts[(firstElementId, secondElementId)] = resultId;
-            _openedReceipts[(secondElementId, firstElementId)] = resultId;
+            _openedRecipes[(firstElementId, secondElementId)] = resultId;
+            _openedRecipes[(secondElementId, firstElementId)] = resultId;
 
             var result = _elements[resultId];
 
@@ -38,7 +44,8 @@ namespace Domain
             {
                 _openedElements[resultId] = result;
             }
-            // todo: save
+            
+            Persist(_openedRecipes, OpenedRecipesFileName);
             return result;
         }
 
@@ -46,11 +53,43 @@ namespace Domain
         {
             _attempts.Add((firstElementId, secondElementId));
             _attempts.Add((secondElementId, firstElementId));
+            Persist(_attempts, AttemptsFileName);
         }
 
+        private void Persist<T>(T persistentObject, string fileName)
+        {
+            var filePath = Path.Combine(Application.persistentDataPath, fileName);
+            
+            using (var stream = File.Create(filePath))
+            {
+                Debug.Log($"writing '{fileName}'");
+                var formatter = new BinaryFormatter();
+                formatter.Serialize(stream, persistentObject);
+                stream.Close();
+            }
+        }
+
+        private T LoadPersistentObject<T>(string fileName) where T : new()
+        {
+            var filePath = Path.Combine(Application.persistentDataPath, fileName);
+            if (!File.Exists(filePath))
+            {
+                return new T();
+            }
+            
+            using (var stream = File.Open(filePath, FileMode.Open))
+            {
+                Debug.Log($"reading from '{fileName}'");
+                var formatter = new BinaryFormatter();
+                var loaded = (T)formatter.Deserialize(stream);
+                stream.Close();
+                return loaded;
+            }
+        }
+        
         public bool TryGetPreviousResult(Guid firstElementId, Guid secondElementId, out Element element)
         {
-            if (_openedReceipts.TryGetValue((firstElementId, secondElementId), out var resultId))
+            if (_openedRecipes.TryGetValue((firstElementId, secondElementId), out var resultId))
             {
                 element = _elements[resultId];
                 return true;
@@ -77,10 +116,13 @@ namespace Domain
 
             _elements = elementsList.ToDictionary(e => e.Id, e => e);
 
+            _attempts = LoadPersistentObject<HashSet<(Guid, Guid)>>(AttemptsFileName);
+            _openedRecipes = LoadPersistentObject<Dictionary<(Guid, Guid), Guid>>(OpenedRecipesFileName);
+            
             // todo: load from save
             foreach (var element in elementsList.Skip(1).Take(4))
             {
-                _openedReceipts[(Guid.NewGuid(), Guid.NewGuid())] = element.Id;
+                //_openedRecipes[(Guid.NewGuid(), Guid.NewGuid())] = element.Id;
                 _openedElements[element.Id] = element;
             }
         }
