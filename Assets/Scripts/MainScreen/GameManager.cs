@@ -15,8 +15,6 @@ namespace MainScreen
         public GameObject elementsBook;
         public ModalWindow modalWindow;
 
-        public Image LockIndicator;
-        
         private IReceiptsBook _receiptsBook;
         private IForge _forge;
         
@@ -95,12 +93,10 @@ namespace MainScreen
         public async Task HandleUiOperation(Task uiOperation)
         {
             Debug.Log("lock");
-            LockIndicator.color = Color.red;
             _inputLocked = true;
             await uiOperation;
             _inputLocked = false;
             Debug.Log("release");
-            LockIndicator.color = Color.green;
         }
 
         private void AddNewElement(Element element)

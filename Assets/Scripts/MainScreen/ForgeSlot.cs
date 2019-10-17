@@ -24,7 +24,7 @@ namespace MainScreen
 
         public async Task ChangeSprite(Sprite sprite)
         {
-            _backImage.color = Color.clear;
+//            _backImage.color = Color.clear;
             _elementImage.sprite = sprite;
             _elementImage.color = Color.white;
 
@@ -66,19 +66,19 @@ namespace MainScreen
             while (t <= 1)
             {
                 _elementImage.color = Color.Lerp(Color.white, Color.clear, t);
-                _backImage.color = Color.Lerp(Color.clear, Color.white, t);
+//                _backImage.color = Color.Lerp(Color.clear, Color.white, t);
                 t += 0.05f;
                 await Task.Delay(ms);
             }
             
             _elementImage.color = Color.clear;
-            _backImage.color = Color.white;
+//            _backImage.color = Color.white;
         }
 
         private async Task MixAnimation()
         {
             _elementImage.color = Color.clear;
-            _backImage.color = Color.white;
+//            _backImage.color = Color.white;
 
             await Instantiate(floatingElementPrefab, GameManager.Instance.CanvasTransform)
                 .GetComponent<FloatingElement>()
