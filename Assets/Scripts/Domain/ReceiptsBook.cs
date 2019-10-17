@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
-using System.Threading.Tasks;
 using Domain.Models;
 using UnityEngine;
 
@@ -68,24 +67,6 @@ namespace Domain
                 stream.Close();
             }
         }
-
-        private T LoadPersistentObject<T>(string fileName) where T : new()
-        {
-            var filePath = Path.Combine(Application.persistentDataPath, fileName);
-            if (!File.Exists(filePath))
-            {
-                return new T();
-            }
-            
-            using (var stream = File.Open(filePath, FileMode.Open))
-            {
-                Debug.Log($"reading from '{fileName}'");
-                var formatter = new BinaryFormatter();
-                var loaded = (T)formatter.Deserialize(stream);
-                stream.Close();
-                return loaded;
-            }
-        }
         
         public bool TryGetPreviousResult(Guid firstElementId, Guid secondElementId, out Element element)
         {
@@ -101,6 +82,7 @@ namespace Domain
 
         private void LoadElements()
         {
+            // todo: доделать персистентность
             _elements.Clear();
             var elementsText = (TextAsset) Resources.Load("Elements");
             var elementsList = elementsText.text
@@ -122,8 +104,26 @@ namespace Domain
             // todo: load from save
             foreach (var element in elementsList.Skip(1).Take(4))
             {
-                //_openedRecipes[(Guid.NewGuid(), Guid.NewGuid())] = element.Id;
+                _openedRecipes[(Guid.NewGuid(), Guid.NewGuid())] = element.Id;
                 _openedElements[element.Id] = element;
+            }
+        }
+        
+        private static T LoadPersistentObject<T>(string fileName) where T : new()
+        {
+            var filePath = Path.Combine(Application.persistentDataPath, fileName);
+            if (!File.Exists(filePath))
+            {
+                return new T();
+            }
+            
+            using (var stream = File.Open(filePath, FileMode.Open))
+            {
+                Debug.Log($"reading from '{fileName}'");
+                var formatter = new BinaryFormatter();
+                var loaded = (T)formatter.Deserialize(stream);
+                stream.Close();
+                return loaded;
             }
         }
     }

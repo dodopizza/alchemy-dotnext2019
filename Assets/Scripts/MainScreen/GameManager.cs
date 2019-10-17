@@ -50,6 +50,12 @@ namespace MainScreen
             _forge = new Forge(_receiptsBook, new NetworkMixChecker());
             InitializeElements();
         }
+        
+        private void Update()
+        {
+            if (Input.GetKeyDown(KeyCode.Escape))
+                Application.Quit();
+        }
 
         public ForgeSlot GetMixElement()
         {
