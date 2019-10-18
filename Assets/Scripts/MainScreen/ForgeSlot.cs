@@ -12,12 +12,13 @@ namespace MainScreen
         public GameObject mixPoint;
 
         private Image _elementImage;
-        private readonly GameManager _gameManager = GameManager.Instance;
+        private GameManager _gameManager;
 
         public bool IsEmpty { get; private set; } = true;
 
         private void Start()
         {
+            _gameManager = GameManager.Instance;
             _elementImage = transform.GetChild(0).GetComponent<Image>();
         }
 
