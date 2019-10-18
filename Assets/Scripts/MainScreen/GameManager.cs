@@ -2,7 +2,6 @@ using System.Threading.Tasks;
 using Domain;
 using Domain.Models;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace MainScreen
 {
@@ -10,6 +9,7 @@ namespace MainScreen
     {
         public ForgeSlot forgeSlotOne;
         public ForgeSlot forgeSlotTwo;
+        public MixPoint mixPoint;
         public GameObject canvas;
         public GameObject elementItemPrefab;
         public GameObject elementsBook;
@@ -77,6 +77,7 @@ namespace MainScreen
                 if (mixResult.IsSuccess)
                 {
                     await Task.WhenAll(forgeSlotOne.Mix(), forgeSlotTwo.Mix());
+                    await mixPoint.ChangeSprite(mixResult.Element.Sprite, mixResult.IsNewlyCreated);
 
                     if (mixResult.IsNewlyCreated)
                     {

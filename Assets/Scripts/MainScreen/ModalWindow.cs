@@ -10,6 +10,7 @@ namespace MainScreen
         
         public Text elementName;
         public Text elementDescription;
+        public MixPoint mixPoint;
         private CanvasGroup _canvasGroup;
         
         private void Start()
@@ -27,6 +28,7 @@ namespace MainScreen
 
         public void Hide()
         {
+            mixPoint.Erase();
             _canvasGroup.alpha = 0f;
             _canvasGroup.blocksRaycasts = false;
         }

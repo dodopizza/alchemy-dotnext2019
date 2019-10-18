@@ -11,20 +11,17 @@ namespace MainScreen
         public GameObject floatingElementPrefab;
         public GameObject mixPoint;
 
-        private Image _backImage;
         private Image _elementImage;
 
         public bool IsEmpty { get; private set; } = true;
 
         private void Start()
         {
-            _backImage = transform.GetComponent<Image>();
             _elementImage = transform.GetChild(0).GetComponent<Image>();
         }
 
         public async Task ChangeSprite(Sprite sprite)
         {
-//            _backImage.color = Color.clear;
             _elementImage.sprite = sprite;
             _elementImage.color = Color.white;
 
@@ -66,19 +63,16 @@ namespace MainScreen
             while (t <= 1)
             {
                 _elementImage.color = Color.Lerp(Color.white, Color.clear, t);
-//                _backImage.color = Color.Lerp(Color.clear, Color.white, t);
                 t += 0.05f;
                 await Task.Delay(ms);
             }
             
             _elementImage.color = Color.clear;
-//            _backImage.color = Color.white;
         }
 
         private async Task MixAnimation()
         {
             _elementImage.color = Color.clear;
-//            _backImage.color = Color.white;
 
             await Instantiate(floatingElementPrefab, GameManager.Instance.CanvasTransform)
                 .GetComponent<FloatingElement>()
