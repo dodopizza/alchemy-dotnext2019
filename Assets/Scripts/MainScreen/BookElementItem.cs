@@ -12,6 +12,7 @@ namespace MainScreen
 
         private Image _image;
         private Element _element;
+        readonly GameManager _gameManager = GameManager.Instance;
 
         private void Start()
         {
@@ -28,19 +29,18 @@ namespace MainScreen
 
         public async void OnPointerDown(PointerEventData eventData)
         {
-            if (!GameManager.Instance.CheckAndLockInput()) 
+            if (!_gameManager.CheckAndLockInput()) 
                 return;
 
-            GameManager.Instance.AddElementToForge(_element);
+            _gameManager.AddElementToForge(_element);
             
-            var mixElement = GameManager.Instance.GetMixElement();
-
-            await GameManager.Instance.HandleUiOperation(SendElementToForge(mixElement));
+            var mixElement = _gameManager.EmptyForgeSlot;
+            await _gameManager.HandleUiOperation(SendElementToForge(mixElement));
         }
         
         private Task SendElementToForge(ForgeSlot mixElement)
         {
-            return Instantiate(floatingElementPrefab, GameManager.Instance.CanvasTransform)
+            return Instantiate(floatingElementPrefab, _gameManager.CanvasTransform)
                 .GetComponent<FloatingElement>()
                 .Run(
                     _image.transform.position,

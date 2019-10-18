@@ -14,4 +14,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/RatingScreen.unity
     guid: c5e58ff11706e464f837d5328fc13c5f
+  - enabled: 1
+    path: Assets/Scenes/InfoScreen.unity
+    guid: ff2002451545c48519a2c1604cd85880
   m_configObjects: {}

@@ -12,6 +12,7 @@ namespace MainScreen
         public GameObject mixPoint;
 
         private Image _elementImage;
+        private readonly GameManager _gameManager = GameManager.Instance;
 
         public bool IsEmpty { get; private set; } = true;
 
@@ -26,15 +27,15 @@ namespace MainScreen
             _elementImage.color = Color.white;
 
             IsEmpty = false;
-            await GameManager.Instance.PerformMix();
+            await _gameManager.PerformMix();
         }
 
         public async void OnPointerClick(PointerEventData eventData)
         {
-            if (GameManager.Instance.CheckAndLockInput())
+            if (_gameManager.CheckAndLockInput())
             {
-                GameManager.Instance.ClearForge();
-                await GameManager.Instance.HandleUiOperation(Erase());
+                _gameManager.ClearForge();
+                await _gameManager.HandleUiOperation(Erase());
             }
         }
         
@@ -74,7 +75,7 @@ namespace MainScreen
         {
             _elementImage.color = Color.clear;
 
-            await Instantiate(floatingElementPrefab, GameManager.Instance.CanvasTransform)
+            await Instantiate(floatingElementPrefab, _gameManager.CanvasTransform)
                 .GetComponent<FloatingElement>()
                 .Run(
                     _elementImage.transform.position,

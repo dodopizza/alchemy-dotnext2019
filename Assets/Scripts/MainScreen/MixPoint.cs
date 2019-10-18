@@ -37,7 +37,7 @@ namespace MainScreen
             var waitForSeconds = duration * 0.05f;
             var ms = (int)(waitForSeconds * 1000);
 
-            await Task.Delay(ms * 20);
+            await Task.Delay(ms * 10);
 
             while (t <= 1)
             {

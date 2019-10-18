@@ -32,6 +32,8 @@ namespace MainScreen
         }
 
         public Transform CanvasTransform => canvas.transform;
+        
+        public ForgeSlot EmptyForgeSlot => forgeSlotOne.IsEmpty ? forgeSlotOne : forgeSlotTwo;
 
         private void Awake()
         {
@@ -54,12 +56,7 @@ namespace MainScreen
         private void Update()
         {
             if (Input.GetKeyDown(KeyCode.Escape))
-                Application.Quit();
-        }
-
-        public ForgeSlot GetMixElement()
-        {
-            return forgeSlotOne.IsEmpty ? forgeSlotOne : forgeSlotTwo;
+                Exit();
         }
 
         public async Task PerformMix()
@@ -69,7 +66,6 @@ namespace MainScreen
                 return;
             
             var operationResult = await resultTask;
-            // todo: логика, когда что-то идёт не так
 
             if (operationResult.IsSuccess)
             {
@@ -99,13 +95,26 @@ namespace MainScreen
 
         public async Task HandleUiOperation(Task uiOperation)
         {
-            Debug.Log("lock");
             _inputLocked = true;
             await uiOperation;
             _inputLocked = false;
-            Debug.Log("release");
         }
 
+        public void AddElementToForge(Element element)
+        {
+            _forge.AddElement(element);
+        }
+
+        public void ClearForge()
+        {
+            _forge.Clear();
+        }
+
+        public void Exit()
+        {
+            Application.Quit();
+        }
+        
         private void AddNewElement(Element element)
         {
             Instantiate(elementItemPrefab, elementsBook.transform)
@@ -123,16 +132,6 @@ namespace MainScreen
                     .GetComponent<BookElementItem>()
                     .SetUp(element);
             }
-        }
-
-        public void AddElementToForge(Element element)
-        {
-            _forge.AddElement(element);
-        }
-
-        public void ClearForge()
-        {
-            _forge.Clear();
         }
     }
 }
