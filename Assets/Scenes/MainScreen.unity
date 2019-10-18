@@ -2306,12 +2306,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 21300000, guid: 358b689fed3e5499b905aaf1e4b88533, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -2344,6 +2344,7 @@ MonoBehaviour:
   duration: 0.2
   elementName: {fileID: 1087733674}
   elementDescription: {fileID: 565832236}
+  mixPoint: {fileID: 801046164}
 --- !u!225 &880381828
 CanvasGroup:
   m_ObjectHideFlags: 0
