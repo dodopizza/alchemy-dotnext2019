@@ -7,21 +7,20 @@ namespace MainScreen
     public class ModalWindow : MonoBehaviour
     {
         public float duration = 0.2f;
-        public Image image;
         
-        private Text _text;
+        public Text elementName;
+        public Text elementDescription;
         private CanvasGroup _canvasGroup;
         
         private void Start()
         {
-            _text = GetComponentInChildren<Text>();
             _canvasGroup = GetComponent<CanvasGroup>();
         }
 
-        public async Task Show(Sprite sprite, string text)
+        public async Task Show(string elementName, string elementDescription)
         {
-            image.sprite = sprite;
-            _text.text = text;
+            this.elementName.text = elementName;
+            this.elementDescription.text = elementDescription;
             await Show();
             _canvasGroup.blocksRaycasts = true;
         }

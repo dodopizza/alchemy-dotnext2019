@@ -80,7 +80,7 @@ namespace MainScreen
 
                     if (mixResult.IsNewlyCreated)
                     {
-                        await modalWindow.Show(mixResult.Element.Sprite, $"Вы собрали {mixResult.Element.Name}!");
+                        await modalWindow.Show($"Вы собрали {mixResult.Element.Name}!", "Описание");
                         AddNewElement(mixResult.Element);
                     }
                 }
