@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Domain;
 using Domain.Models;
@@ -21,7 +23,7 @@ namespace MainScreen
         public static GameManager Instance { get; private set; }
 
         private bool _inputLocked;
-        private int _scores;
+        private int _score;
         private int _openedElements;
 
         public bool CheckAndLockInput()
@@ -57,9 +59,9 @@ namespace MainScreen
             _recipeBook = new RecipeBook();
             _forge = new Forge(_recipeBook, new NetworkMixChecker());
 
-            await _recipeBook.LoadInitialElements();
-            InitializeElements();
-            InitializeScores();
+            var initialElements = await _recipeBook.LoadInitialElements();
+            InitializeElements(initialElements);
+            InitializeScores(initialElements);
         }
 
         private void Update()
@@ -128,7 +130,6 @@ namespace MainScreen
 
         public async void EraseData()
         {
-//            await (_recipeBook as RecipeBook).TryLoad();
             Persistence.EraseData();
             PlayerPrefs.SetInt(Constants.UserScoresKey, 0);
             PlayerPrefs.SetInt(Constants.OpenedElementsKey, 4);
@@ -141,11 +142,9 @@ namespace MainScreen
                 .SetUp(element);
         }
         
-        private void InitializeElements()
+        private void InitializeElements(IEnumerable<Element> elements)
         {
-            var openedElements = _recipeBook.GetOpenedElements();
-
-            foreach (var element in openedElements)
+            foreach (var element in elements)
             {
                 Instantiate(elementItemPrefab, elementsBook.transform)
                     .GetComponent<BookElementItem>()
@@ -153,28 +152,17 @@ namespace MainScreen
             }
         }
         
-        private void InitializeScores()
+        private void InitializeScores(IReadOnlyCollection<Element> elements)
         {
-            if (PlayerPrefs.HasKey(Constants.UserScoresKey))
-            {
-                _scores = PlayerPrefs.GetInt(Constants.UserScoresKey);
-            }
+            _score = elements.Sum(e => e.Score);
+            _openedElements = elements.Count;
 
-            if (PlayerPrefs.HasKey(Constants.OpenedElementsKey))
-            {
-                _openedElements = PlayerPrefs.GetInt(Constants.OpenedElementsKey);
-            }
-            else
-            {
-                _openedElements = 4;
-            }
-            
             SaveAndUpdateScores();
         }
 
         private void AddElementScores(int scores)
         {
-            _scores += scores;
+            _score += scores;
             _openedElements++;
             
             SaveAndUpdateScores();
@@ -182,10 +170,10 @@ namespace MainScreen
 
         private void SaveAndUpdateScores()
         {
-            PlayerPrefs.SetInt(Constants.UserScoresKey, _scores);
+            PlayerPrefs.SetInt(Constants.UserScoresKey, _score);
             PlayerPrefs.SetInt(Constants.OpenedElementsKey, _openedElements);
             PlayerPrefs.Save();
-            OnScoresAdd?.Invoke(_scores, _openedElements);
+            OnScoresAdd?.Invoke(_score, _openedElements);
         }
     }
 }

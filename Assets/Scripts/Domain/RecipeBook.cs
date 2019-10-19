@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Domain.Models;
-using Task = System.Threading.Tasks.Task;
 
 namespace Domain
 {
@@ -11,7 +11,7 @@ namespace Domain
         private Dictionary<Guid, Element> _openedElements;
         private readonly Dictionary<(Guid firstId, Guid secondId), Guid> _openedRecipes;
 
-        public async Task LoadInitialElements()
+        public async Task<List<Element>> LoadInitialElements()
         {
             _openedElements = Persistence.LoadElements();
 
@@ -25,6 +25,8 @@ namespace Domain
                     Persistence.SaveElements(_openedElements);
                 }
             }
+
+            return _openedElements.Values.ToList();
         }
 
         public RecipeBook()
@@ -32,11 +34,6 @@ namespace Domain
             _openedRecipes = Persistence.LoadRecipes();
         }
 
-        public IEnumerable<Element> GetOpenedElements()
-        {
-            return _openedElements.Values;
-        }
-        
         public bool TryGetPreviousResult(Guid firstElementId, Guid secondElementId, out Element element)
         {
             if (_openedRecipes.TryGetValue((firstElementId, secondElementId), out var resultId))

@@ -7,7 +7,7 @@ namespace MainScreen
     public class InfoText : MonoBehaviour
     {
         private GameManager.ScoresAdd _instanceOnOnScoresAdd;
-        private void Start()
+        private void Awake()
         {
             var textComponent = GetComponentInChildren<Text>();
 
