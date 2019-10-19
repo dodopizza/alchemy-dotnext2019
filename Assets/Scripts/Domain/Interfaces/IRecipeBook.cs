@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Domain.Models;
 
-namespace Domain
+namespace Domain.Interfaces
 {
     internal interface IRecipeBook
     {

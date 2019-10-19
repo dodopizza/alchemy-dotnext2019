@@ -2,9 +2,9 @@ using System.Threading.Tasks;
 using Domain.Models;
 using UnityEngine;
 
-namespace Domain
+namespace Domain.Dummy
 {
-	public class DummyRatingFetcher : IRatingFetcher
+	public class DummyRatingFetcher : Interfaces.IRatingFetcher
 	{
 		public Task<OperationResult<Models.RatingEntry[]>> GetTopRating()
 		{

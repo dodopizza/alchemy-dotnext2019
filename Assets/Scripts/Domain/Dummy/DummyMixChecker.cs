@@ -3,9 +3,9 @@ using System.Threading.Tasks;
 using Domain.Models;
 using UnityEngine;
 
-namespace Domain
+namespace Domain.Dummy
 {
-    internal class DummyMixChecker : IMixChecker
+    internal class DummyMixChecker : Interfaces.IMixChecker
     {
         public Task<OperationResult<CheckResult>> Check(Guid firstElementId, Guid secondElementId)
         {

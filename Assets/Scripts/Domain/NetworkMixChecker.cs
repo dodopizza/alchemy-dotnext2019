@@ -6,7 +6,7 @@ using Utils;
 
 namespace Domain
 {
-    public class NetworkMixChecker : IMixChecker
+    public class NetworkMixChecker : Interfaces.IMixChecker
     {
         private readonly string _userId;
 

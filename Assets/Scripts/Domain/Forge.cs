@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using Domain.Interfaces;
 using Domain.Models;
 
 namespace Domain
@@ -9,9 +10,9 @@ namespace Domain
         private Element _firstElement;
         private Task<OperationResult<MixResult>> _getResultTask;
         private readonly IRecipeBook _book;
-        private readonly IMixChecker _mixChecker;
+        private readonly Interfaces.IMixChecker _mixChecker;
 
-        public Forge(IRecipeBook book, IMixChecker mixChecker)
+        public Forge(IRecipeBook book, Interfaces.IMixChecker mixChecker)
         {
             _book = book;
             _mixChecker = mixChecker;

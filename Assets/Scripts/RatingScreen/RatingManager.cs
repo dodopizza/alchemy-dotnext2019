@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Domain;
 using Domain.Models;
 using UnityEngine;
+using DummyRatingFetcher = Domain.Dummy.DummyRatingFetcher;
 
 namespace RatingScreen
 {
