@@ -15,7 +15,7 @@ namespace MainScreen
         public GameObject elementsBook;
         public ModalWindow modalWindow;
 
-        private IReceiptsBook _receiptsBook;
+        private IRecipeBook _recipeBook;
         private IForge _forge;
         
         public static GameManager Instance { get; private set; }
@@ -54,8 +54,9 @@ namespace MainScreen
 
         private void Start()
         {
-            _receiptsBook = new ReceiptsBook();
-            _forge = new Forge(_receiptsBook, new NetworkMixChecker());
+            _recipeBook = new RecipeBook();
+//            _forge = new Forge(_receiptsBook, new NetworkMixChecker());
+            _forge = new Forge(_recipeBook, new DummyMixChecker());
             InitializeElements();
             InitializeScores();
         }
@@ -121,6 +122,11 @@ namespace MainScreen
         {
             Application.Quit();
         }
+
+        public void EraseData()
+        {
+            Persistence.EraseData();
+        }
         
         private void AddNewElement(Element element)
         {
@@ -131,7 +137,7 @@ namespace MainScreen
         
         private void InitializeElements()
         {
-            var openedElements = _receiptsBook.GetOpenedElements();
+            var openedElements = _recipeBook.GetOpenedElements();
 
             foreach (var element in openedElements)
             {

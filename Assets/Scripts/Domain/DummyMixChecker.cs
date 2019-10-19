@@ -13,9 +13,9 @@ namespace Domain
             if (UnityEngine.Random.Range(0, 2) == 1)
             {
                 return ReturnResult(CheckResult.Success(
-                    "959ba1ca-7239-4a42-8f30-b5de84396faa", 
-                    "единичка",
-                    "единичка",
+                    "fd540609-4bb5-4b96-bde0-167ee8e283c6", 
+                    "электричество",
+                    "электричество",
                     10, 
                     "description"));
             }

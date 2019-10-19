@@ -8,10 +8,10 @@ namespace Domain
     {
         private Element _firstElement;
         private Task<OperationResult<MixResult>> _getResultTask;
-        private readonly IReceiptsBook _book;
+        private readonly IRecipeBook _book;
         private readonly IMixChecker _mixChecker;
 
-        public Forge(IReceiptsBook book, IMixChecker mixChecker)
+        public Forge(IRecipeBook book, IMixChecker mixChecker)
         {
             _book = book;
             _mixChecker = mixChecker;

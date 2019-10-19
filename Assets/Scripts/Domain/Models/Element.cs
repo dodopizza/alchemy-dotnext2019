@@ -28,5 +28,22 @@ namespace Domain.Models
         {
             return new Element(id, spriteName, name, 0, null);
         }
+
+        public SerializableElement ToSerializable()
+        {
+            return new SerializableElement
+            {
+                Id = Id.ToString(),
+                Description = Description,
+                Name = Name,
+                Scores = Scores,
+                Sprite = Sprite.name
+            };
+        }
+
+        public static Element FromSerializable(SerializableElement element)
+        {
+            return new Element(new Guid(element.Id), element.Sprite, element.Name, element.Scores, element.Description);
+        }
     }
 }

@@ -4,7 +4,7 @@ using Domain.Models;
 
 namespace Domain
 {
-    internal interface IReceiptsBook
+    internal interface IRecipeBook
     {
         IEnumerable<Element> GetOpenedElements();
         
