@@ -54,15 +54,12 @@ namespace Domain
                     return OperationResult<MixResult>.Success(MixResult.Fail());
                 }
 
-                var saveNewResult = _book.SaveNewRecipe(
+                var isNewlyCreated = _book.CheckAndSaveNewRecipe(
                     firstId,
                     secondId,
-                    checkResult.CreatedElementId,
-                    out var isNewlyCreated);
-
-                // scores
-                // description
-                return OperationResult<MixResult>.Success(ReturnResult(saveNewResult, isNewlyCreated));
+                    checkResult.CreatedElement);
+                
+                return OperationResult<MixResult>.Success(ReturnResult(checkResult.CreatedElement, isNewlyCreated));
             }
             
             return OperationResult<MixResult>.Failure();

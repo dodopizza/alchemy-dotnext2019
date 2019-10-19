@@ -11,11 +11,17 @@ namespace Domain.Models
         
         public string Name { get; }
         
-        public Element(Guid id, Sprite sprite, string name)
+        public int Scores { get; }
+        
+        public string Description { get; }
+        
+        public Element(Guid id, string spriteName, string name, int scores, string description)
         {
             Id = id;
-            Sprite = sprite;
+            Sprite = (Sprite) Resources.Load($"Sprites/Elements/{spriteName}", typeof(Sprite));
             Name = name;
+            Scores = scores;
+            Description = description;
         }
     }
 }

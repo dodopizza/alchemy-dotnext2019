@@ -40,6 +40,8 @@ namespace Domain
                         return OperationResult<CheckResult>.Success(
                             CheckResult.Success(
                                 intermediateResult.createdElementId,
+                                intermediateResult.spriteName,
+                                intermediateResult.name,
                                 intermediateResult.scores,
                                 intermediateResult.description));
                     }
@@ -69,6 +71,10 @@ namespace Domain
             public string description;
 
             public int scores;
+
+            public string name;
+
+            public string spriteName;
         }
     }
 }

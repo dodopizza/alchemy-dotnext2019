@@ -14,7 +14,7 @@ namespace Domain.Models
         public bool IsNewlyCreated { get; }
         
         public Element Element { get; }
-
+        
         public static MixResult Success(bool isNewlyCreated, Element element)
         {
             return new MixResult(true, isNewlyCreated, element);

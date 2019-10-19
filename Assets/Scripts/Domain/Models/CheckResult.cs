@@ -6,28 +6,28 @@ namespace Domain.Models
     {
         public bool IsSuccess { get; }
         
-        public Guid CreatedElementId { get; }
-        
-        public int Scores { get; }
-        
-        public string Description { get; }
+        public Element CreatedElement { get; }
 
-        private CheckResult(bool isSuccess, Guid createdElementId, int scores, string description)
+        private CheckResult(bool isSuccess, Element element)
         {
             IsSuccess = isSuccess;
-            CreatedElementId = createdElementId;
-            Scores = scores;
-            Description = description;
+            CreatedElement = element;
         }
 
-        public static CheckResult Success(string createdElementId, int scores, string description)
+        public static CheckResult Success(
+            string createdElementId,
+            string spriteName,
+            string name,
+            int scores,
+            string description)
         {
-            return new CheckResult(true, Guid.Parse(createdElementId), scores, description);
+            var element = new Element(Guid.Parse(createdElementId), spriteName, name, scores, description);
+            return new CheckResult(true, element);
         }
 
         public static CheckResult Failure()
         {
-            return new CheckResult(false, Guid.Empty, 0, null);
+            return new CheckResult(false, null);
         }
     }
 }
