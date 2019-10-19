@@ -8,17 +8,24 @@ namespace Domain
 {
     public class NetworkMixChecker : IMixChecker
     {
+        private readonly string _userId;
+
+        public NetworkMixChecker()
+        {
+            _userId = PlayerPrefs.GetString(Constants.UserIdKey);
+        }
+        
         public async Task<OperationResult<CheckResult>> Check(Guid firstElementId, Guid secondElementId)
         {
             var checkRequest = new CheckRequest
             {
                 FirstElement = firstElementId.ToString(),
                 SecondElement = secondElementId.ToString(),
-                UserId = Guid.NewGuid().ToString()
+                UserId = _userId
             };
             
             //todo: retry
-            using (var request = HttpClient.CreateApiPostRequest(Constants.ApiUrl + "/api/Elements/test", checkRequest))
+            using (var request = HttpClient.CreateApiPostRequest(Constants.ApiUrl + "/api/Elements/merge", checkRequest))
             {
                 request.timeout = Constants.RpcTimeoutSeconds;
                 
@@ -33,7 +40,8 @@ namespace Domain
                         return OperationResult<CheckResult>.Success(
                             CheckResult.Success(
                                 intermediateResult.createdElementId,
-                                intermediateResult.scores));
+                                intermediateResult.scores,
+                                intermediateResult.description));
                     }
                     
                     return OperationResult<CheckResult>.Success(CheckResult.Failure());
@@ -57,6 +65,8 @@ namespace Domain
             public bool isSuccess;
 
             public string createdElementId;
+
+            public string description;
 
             public int scores;
         }

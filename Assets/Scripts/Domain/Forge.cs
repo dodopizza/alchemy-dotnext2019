@@ -60,6 +60,8 @@ namespace Domain
                     checkResult.CreatedElementId,
                     out var isNewlyCreated);
 
+                // scores
+                // description
                 return OperationResult<MixResult>.Success(ReturnResult(saveNewResult, isNewlyCreated));
             }
             

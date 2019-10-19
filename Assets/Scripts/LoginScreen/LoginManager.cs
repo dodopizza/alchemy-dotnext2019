@@ -43,6 +43,7 @@ namespace LoginScreen
                 }
                 
                 PlayerPrefs.SetString(Constants.UserIdKey, userId);
+                PlayerPrefs.Save();
                 SceneManager.LoadSceneAsync("MainScreen");
             }
         }

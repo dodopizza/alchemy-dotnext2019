@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using Domain;
 using Domain.Models;
@@ -21,6 +22,8 @@ namespace MainScreen
         public static GameManager Instance { get; private set; }
 
         private bool _inputLocked;
+        private int _scores;
+        private int _openedElements;
 
         public bool CheckAndLockInput()
         {
@@ -34,6 +37,10 @@ namespace MainScreen
         public Transform CanvasTransform => canvas.transform;
         
         public ForgeSlot EmptyForgeSlot => forgeSlotOne.IsEmpty ? forgeSlotOne : forgeSlotTwo;
+
+        public delegate void ScoresAdd(int scores, int openedElements);
+
+        public event ScoresAdd OnScoresAdd;
 
         private void Awake()
         {
@@ -51,8 +58,9 @@ namespace MainScreen
             _receiptsBook = new ReceiptsBook();
             _forge = new Forge(_receiptsBook, new NetworkMixChecker());
             InitializeElements();
+            InitializeScores();
         }
-        
+
         private void Update()
         {
             if (Input.GetKeyDown(KeyCode.Escape))
@@ -132,6 +140,41 @@ namespace MainScreen
                     .GetComponent<BookElementItem>()
                     .SetUp(element);
             }
+        }
+        
+        private void InitializeScores()
+        {
+            if (PlayerPrefs.HasKey(Constants.UserScoresKey))
+            {
+                _scores = PlayerPrefs.GetInt(Constants.UserScoresKey);
+            }
+
+            if (PlayerPrefs.HasKey(Constants.OpenedElementsKey))
+            {
+                _openedElements = PlayerPrefs.GetInt(Constants.OpenedElementsKey);
+            }
+            else
+            {
+                _openedElements = 4;
+            }
+            
+            SaveAndUpdateScores();
+        }
+
+        private void AddElementScores(int scores)
+        {
+            _scores += scores;
+            _openedElements++;
+            
+            SaveAndUpdateScores();
+        }
+
+        private void SaveAndUpdateScores()
+        {
+            PlayerPrefs.SetInt(Constants.UserScoresKey, _scores);
+            PlayerPrefs.SetInt(Constants.OpenedElementsKey, _openedElements);
+            PlayerPrefs.Save();
+            OnScoresAdd?.Invoke(_scores, _openedElements);
         }
     }
 }

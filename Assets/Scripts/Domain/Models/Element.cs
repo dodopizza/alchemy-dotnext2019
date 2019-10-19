@@ -10,7 +10,7 @@ namespace Domain.Models
         public Sprite Sprite { get; }
         
         public string Name { get; }
-
+        
         public Element(Guid id, Sprite sprite, string name)
         {
             Id = id;

@@ -12,7 +12,7 @@ namespace Domain
             Debug.Log("Remote call!");
             if (UnityEngine.Random.Range(0, 2) == 1)
             {
-                return ReturnResult(CheckResult.Success("959ba1ca-7239-4a42-8f30-b5de84396faa", 10));
+                return ReturnResult(CheckResult.Success("959ba1ca-7239-4a42-8f30-b5de84396faa", 10, "description"));
             }
 
             return ReturnResult(CheckResult.Failure());
