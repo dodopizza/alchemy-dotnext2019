@@ -119,7 +119,7 @@ namespace Domain
                 id = element.Id.ToString(),
                 description = element.Description,
                 name = element.Name,
-                scores = element.Scores,
+                scores = element.Score,
                 sprite = element.Sprite.name
             };
         }

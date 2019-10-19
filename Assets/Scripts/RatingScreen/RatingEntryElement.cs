@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class RatingEntry : MonoBehaviour
+public class RatingEntryElement : MonoBehaviour
 {
     public Text text;
     public Graphic background;

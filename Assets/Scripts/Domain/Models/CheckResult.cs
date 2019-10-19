@@ -18,10 +18,10 @@ namespace Domain.Models
             string createdElementId,
             string spriteName,
             string name,
-            int scores,
+            int score,
             string description)
         {
-            var element = new Element(Guid.Parse(createdElementId), spriteName, name, scores, description);
+            var element = new Element(Guid.Parse(createdElementId), spriteName, name, score, description);
             return new CheckResult(true, element);
         }
 

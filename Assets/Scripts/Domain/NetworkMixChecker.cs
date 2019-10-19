@@ -39,11 +39,11 @@ namespace Domain
                     {
                         return OperationResult<CheckResult>.Success(
                             CheckResult.Success(
-                                intermediateResult.createdElementId,
-                                intermediateResult.spriteName,
-                                intermediateResult.name,
-                                intermediateResult.scores,
-                                intermediateResult.description));
+                                intermediateResult.mergeResultElement.id,
+                                intermediateResult.mergeResultElement.imageName,
+                                intermediateResult.mergeResultElement.name,
+                                intermediateResult.mergeResultElement.score,
+                                intermediateResult.mergeResultElement.description));
                     }
                     
                     return OperationResult<CheckResult>.Success(CheckResult.Failure());
@@ -66,15 +66,17 @@ namespace Domain
         {
             public bool isSuccess;
 
-            public string createdElementId;
-
-            public string description;
-
-            public int scores;
-
-            public string name;
-
-            public string spriteName;
+            public MergeResultElement mergeResultElement;
+            public class MergeResultElement
+            {
+                public string id;
+                public string imageName;
+                public int score;
+                public string name;
+                public string description;
+                public bool isBaseElement;
+            }
+            
         }
     }
 }

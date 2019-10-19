@@ -11,16 +11,16 @@ namespace Domain.Models
         
         public string Name { get; }
         
-        public int Scores { get; }
+        public int Score { get; }
         
         public string Description { get; }
         
-        public Element(Guid id, string spriteName, string name, int scores, string description)
+        public Element(Guid id, string spriteName, string name, int score, string description)
         {
             Id = id;
             Sprite = (Sprite) Resources.Load($"Sprites/Elements/{spriteName}", typeof(Sprite));
             Name = name;
-            Scores = scores;
+            Score = score;
             Description = description;
         }
 

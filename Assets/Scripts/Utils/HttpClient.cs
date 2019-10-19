@@ -26,7 +26,6 @@ namespace Utils
             }
             else if (body != null)
             {
-                // todo: это работает плохо. Поправить
                 bodyString = JsonUtility.ToJson(body);
             }
 

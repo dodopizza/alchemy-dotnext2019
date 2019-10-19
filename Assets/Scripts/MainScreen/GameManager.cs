@@ -55,8 +55,8 @@ namespace MainScreen
         private void Start()
         {
             _recipeBook = new RecipeBook();
-//            _forge = new Forge(_receiptsBook, new NetworkMixChecker());
-            _forge = new Forge(_recipeBook, new DummyMixChecker());
+            _forge = new Forge(_recipeBook, new NetworkMixChecker());
+//            _forge = new Forge(_recipeBook, new DummyMixChecker());
             InitializeElements();
             InitializeScores();
         }
@@ -87,7 +87,7 @@ namespace MainScreen
                     {
                         var element = mixResult.Element;
                         await modalWindow.Show($"Вы собрали {element.Name}!", element.Description);
-                        AddElementScores(element.Scores);
+                        AddElementScores(element.Score);
                         AddNewElement(element);
                     }
                 }
