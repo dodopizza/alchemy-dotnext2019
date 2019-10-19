@@ -324,9 +324,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 217305358}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 606815b7ec734f50a009aff187a05da1, type: 3}
+  m_Script: {fileID: 11500000, guid: 10d1a3be624744a9838bc086428415ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  inputField: {fileID: 253026611}
 --- !u!1 &253026609
 GameObject:
   m_ObjectHideFlags: 0
@@ -530,7 +531,7 @@ MonoBehaviour:
     m_MaxSize: 300
     m_Alignment: 0
     m_AlignByGeometry: 0
-    m_RichText: 1
+    m_RichText: 0
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 0
     m_LineSpacing: 1

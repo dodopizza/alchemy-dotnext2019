@@ -30,18 +30,15 @@ namespace Domain
 
                     if (intermediateResult.isSuccess)
                     {
-                        Debug.Log("Success");
                         return OperationResult<CheckResult>.Success(
                             CheckResult.Success(
                                 intermediateResult.createdElementId,
                                 intermediateResult.scores));
                     }
                     
-                    Debug.Log("Fail");
                     return OperationResult<CheckResult>.Success(CheckResult.Failure());
                 }
 
-                Debug.Log($"Server error: {request.error}");
                 return OperationResult<CheckResult>.Failure();
             }
         }
