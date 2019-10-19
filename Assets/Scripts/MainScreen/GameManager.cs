@@ -85,8 +85,10 @@ namespace MainScreen
 
                     if (mixResult.IsNewlyCreated)
                     {
-                        await modalWindow.Show($"Вы собрали {mixResult.Element.Name}!", "Описание");
-                        AddNewElement(mixResult.Element);
+                        var element = mixResult.Element;
+                        await modalWindow.Show($"Вы собрали {element.Name}!", element.Description);
+                        AddElementScores(element.Scores);
+                        AddNewElement(element);
                     }
                 }
                 else
@@ -126,6 +128,8 @@ namespace MainScreen
         public void EraseData()
         {
             Persistence.EraseData();
+            PlayerPrefs.SetInt(Constants.UserScoresKey, 0);
+            PlayerPrefs.SetInt(Constants.OpenedElementsKey, 4);
         }
         
         private void AddNewElement(Element element)
