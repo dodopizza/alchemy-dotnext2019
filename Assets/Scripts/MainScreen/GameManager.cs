@@ -52,11 +52,12 @@ namespace MainScreen
             Instance = this;
         }
 
-        private void Start()
+        private async void Start()
         {
             _recipeBook = new RecipeBook();
             _forge = new Forge(_recipeBook, new NetworkMixChecker());
-//            _forge = new Forge(_recipeBook, new DummyMixChecker());
+
+            await _recipeBook.LoadInitialElements();
             InitializeElements();
             InitializeScores();
         }
@@ -125,8 +126,9 @@ namespace MainScreen
             Application.Quit();
         }
 
-        public void EraseData()
+        public async void EraseData()
         {
+//            await (_recipeBook as RecipeBook).TryLoad();
             Persistence.EraseData();
             PlayerPrefs.SetInt(Constants.UserScoresKey, 0);
             PlayerPrefs.SetInt(Constants.OpenedElementsKey, 4);

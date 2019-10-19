@@ -62,21 +62,24 @@ namespace Domain
             public string UserId;
         }
 
+        [Serializable]
         private class InternalCheckResult
         {
             public bool isSuccess;
 
             public MergeResultElement mergeResultElement;
-            public class MergeResultElement
-            {
-                public string id;
-                public string imageName;
-                public int score;
-                public string name;
-                public string description;
-                public bool isBaseElement;
-            }
             
+        }
+        
+        [Serializable]
+        private class MergeResultElement
+        {
+            public string id;
+            public string imageName;
+            public int score;
+            public string name;
+            public string description;
+            public bool isBaseElement;
         }
     }
 }

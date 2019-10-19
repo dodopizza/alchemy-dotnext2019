@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Domain.Models;
 
 namespace Domain
@@ -13,5 +14,7 @@ namespace Domain
         void SaveAttempt(Guid firstElementId, Guid secondElementId);
         
         bool TryGetPreviousResult(Guid firstElementId, Guid secondElementId, out Element element);
+
+        Task LoadInitialElements();
     }
 }
