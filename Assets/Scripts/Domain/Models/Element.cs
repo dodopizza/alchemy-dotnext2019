@@ -23,5 +23,10 @@ namespace Domain.Models
             Scores = scores;
             Description = description;
         }
+
+        public static Element StartElement(Guid id, string spriteName, string name)
+        {
+            return new Element(id, spriteName, name, 0, null);
+        }
     }
 }

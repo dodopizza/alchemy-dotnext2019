@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
 using Domain.Models;
 using UnityEngine;
@@ -10,16 +9,12 @@ namespace Domain
 {
     class ReceiptsBook : IReceiptsBook
     {
-        private Dictionary<Guid, Element> _elements = new Dictionary<Guid, Element>();
-        private readonly Dictionary<Guid, Element> _openedElements = new Dictionary<Guid, Element>();
+        private Dictionary<Guid, Element> _openedElements = new Dictionary<Guid, Element>();
         private Dictionary<(Guid firstId, Guid secondId), Guid> _openedRecipes 
             = new Dictionary<(Guid firstId, Guid secondId), Guid>();
-        private HashSet<(Guid, Guid)> _attempts = new HashSet<(Guid, Guid)>();
 
-        private const string AttemptsFileName = "attempts.bin";
         private const string OpenedRecipesFileName = "openedRecipes.bin";
-
-        const string key = "OpenedElements";
+        private const string OpenedElementsFileName = "openedElements.bin";
         
         public ReceiptsBook()
         {
@@ -31,28 +26,39 @@ namespace Domain
             return _openedElements.Values;
         }
         
-        public Element SaveNewRecipe(Guid firstElementId, Guid secondElementId, Guid resultId, out bool newlyCreated)
+        public bool TryGetPreviousResult(Guid firstElementId, Guid secondElementId, out Element element)
         {
-            _openedRecipes[(firstElementId, secondElementId)] = resultId;
-            _openedRecipes[(secondElementId, firstElementId)] = resultId;
+            if (_openedRecipes.TryGetValue((firstElementId, secondElementId), out var resultId))
+            {
+                element = resultId == Guid.Empty ? null : _openedElements[resultId];
+                return true;
+            }
 
-            var result = _elements[resultId];
+            element = null;
+            return false;
+        }
 
-            newlyCreated = !_openedElements.ContainsKey(resultId); 
+        public bool CheckAndSaveNewRecipe(Guid firstElementId, Guid secondElementId, Element createdElement)
+        {
+            _openedRecipes[(firstElementId, secondElementId)] = createdElement.Id;
+            _openedRecipes[(secondElementId, firstElementId)] = createdElement.Id;
+
+            var newlyCreated = !_openedElements.ContainsKey(createdElement.Id); 
             if (newlyCreated)
             {
-                _openedElements[resultId] = result;
+                _openedElements[createdElement.Id] = createdElement;
+                Persist(_openedElements, OpenedElementsFileName);
             }
             
             Persist(_openedRecipes, OpenedRecipesFileName);
-            return result;
+            return newlyCreated;
         }
 
         public void SaveAttempt(Guid firstElementId, Guid secondElementId)
         {
-            _attempts.Add((firstElementId, secondElementId));
-            _attempts.Add((secondElementId, firstElementId));
-            Persist(_attempts, AttemptsFileName);
+            _openedRecipes[(firstElementId, secondElementId)] = Guid.Empty;
+            _openedRecipes[(secondElementId, firstElementId)] = Guid.Empty;
+            Persist(_openedRecipes, OpenedRecipesFileName);
         }
 
         private void Persist<T>(T persistentObject, string fileName)
@@ -67,45 +73,35 @@ namespace Domain
                 stream.Close();
             }
         }
-        
-        public bool TryGetPreviousResult(Guid firstElementId, Guid secondElementId, out Element element)
-        {
-            if (_openedRecipes.TryGetValue((firstElementId, secondElementId), out var resultId))
-            {
-                element = _elements[resultId];
-                return true;
-            }
-
-            element = null;
-            return _attempts.Contains((firstElementId, secondElementId));
-        }
 
         private void LoadElements()
         {
-            // todo: доделать персистентность
-            _elements.Clear();
-            var elementsText = (TextAsset) Resources.Load("Elements");
-            var elementsList = elementsText.text
-                .Split('\n')
-                .Select(x =>
-                {
-                    var a = x.Split(';');
-                    return new Element(
-                        new Guid(a[0]),
-                        (Sprite) Resources.Load($"Sprites/Elements/{a[1]}", typeof(Sprite)),
-                        a[2]);
-                }).ToList();
-
-            _elements = elementsList.ToDictionary(e => e.Id, e => e);
-
-            _attempts = LoadPersistentObject<HashSet<(Guid, Guid)>>(AttemptsFileName);
-            _openedRecipes = LoadPersistentObject<Dictionary<(Guid, Guid), Guid>>(OpenedRecipesFileName);
-            
-            // todo: load from save
-            foreach (var element in elementsList.Skip(1).Take(4))
+            if (File.Exists(OpenedRecipesFileName))
             {
-                _openedRecipes[(Guid.NewGuid(), Guid.NewGuid())] = element.Id;
-                _openedElements[element.Id] = element;
+                _openedRecipes = LoadPersistentObject<Dictionary<(Guid, Guid), Guid>>(OpenedRecipesFileName);
+            }
+
+            if (File.Exists(OpenedElementsFileName))
+            {
+                _openedElements = LoadPersistentObject<Dictionary<Guid, Element>>(OpenedElementsFileName);
+            }
+            else
+            {
+                _openedElements.Add(
+                    new Guid("959ba1ca-7239-4a42-8f30-b5de84396faa"), 
+                    Element.StartElement(new Guid("959ba1ca-7239-4a42-8f30-b5de84396faa"), "единичка", "единичка"));
+                
+                _openedElements.Add(
+                    new Guid("6452b48f-31fd-4c66-94df-cfff1174d9d6"), 
+                    Element.StartElement(new Guid("6452b48f-31fd-4c66-94df-cfff1174d9d6"), "dodo", "додо"));
+                
+                _openedElements.Add(
+                    new Guid("911e1853-3ac5-4cf1-a242-f69fce2840c6"), 
+                    Element.StartElement(new Guid("911e1853-3ac5-4cf1-a242-f69fce2840c6"), "pizza", "пицца"));
+                
+                _openedElements.Add(
+                    new Guid("7b92464e-d032-4890-a127-aa68889d1d4e"), 
+                    Element.StartElement(new Guid("7b92464e-d032-4890-a127-aa68889d1d4e"), "человек", "человек"));
             }
         }
         
