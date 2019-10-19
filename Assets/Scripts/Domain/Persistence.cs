@@ -63,8 +63,8 @@ namespace Domain
             if (File.Exists(Path.Combine(Application.persistentDataPath, OpenedElementsFileName)))
             {
                 var serializableElements = Load<ElementsDictionary>(OpenedElementsFileName);
-                openedElements = serializableElements?.dictionary?
-                                      .ToDictionary(s => new Guid(s.Key), s => Element.FromSerializable(s.Value))
+                openedElements = serializableElements?.dictionary?.ToDictionary(
+                                     s => new Guid(s.Key), s => s.Value.ToElement())
                                   ?? new Dictionary<Guid, Element>();
             }
 
@@ -97,5 +97,36 @@ namespace Domain
         
         private class ElementsDictionary : SerializableDictionary<string, SerializableElement>
         {}
+        
+        [Serializable]
+        private class SerializableElement
+        {
+            public string id;
+
+            public string sprite;
+
+            public string name;
+
+            public int scores;
+
+            public string description;
+        }
+        
+        private static SerializableElement ToSerializable(this Element element)
+        {
+            return new SerializableElement
+            {
+                id = element.Id.ToString(),
+                description = element.Description,
+                name = element.Name,
+                scores = element.Scores,
+                sprite = element.Sprite.name
+            };
+        }
+
+        private static Element ToElement(this SerializableElement element)
+        {
+            return new Element(new Guid(element.id), element.sprite, element.name, element.scores, element.description);
+        }
     }
 }
