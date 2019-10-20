@@ -16,9 +16,10 @@ namespace MainScreen
         public GameObject underUpperLayer;
         public GameObject elementItemPrefab;
         public GameObject newElementWindowPrefab;
+        public GameObject confirmExitWindowPrefab;
+
         public GameObject elementsBook;
 
-//        public ModalWindow modalWindow;
 
         private IRecipeBook _recipeBook;
         private IForge _forge;
@@ -70,9 +71,16 @@ namespace MainScreen
         private void Update()
         {
             if (Input.GetKeyDown(KeyCode.Escape))
+            {
                 Exit();
+            }
         }
 
+        public void Exit()
+        {
+            Instantiate(confirmExitWindowPrefab, UnderUpperLayerTransform);
+        }
+        
         public async Task PerformMix()
         {
             var resultTask = _forge.GetMixResult();
@@ -133,11 +141,6 @@ namespace MainScreen
             _forge.Clear();
         }
 
-        public void Exit()
-        {
-            Application.Quit();
-        }
-
         public async void EraseData()
         {
             Persistence.EraseData();
@@ -156,9 +159,7 @@ namespace MainScreen
         {
             foreach (var element in elements)
             {
-                Instantiate(elementItemPrefab, elementsBook.transform)
-                    .GetComponent<BookElementItem>()
-                    .SetUp(element);
+                AddNewElement(element);
             }
         }
         

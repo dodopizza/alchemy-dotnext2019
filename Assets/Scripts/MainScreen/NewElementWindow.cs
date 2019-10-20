@@ -41,8 +41,7 @@ namespace MainScreen
         public void Hide()
         {
             _mixPoint.Erase();
-            _canvasGroup.alpha = 0f;
-            _canvasGroup.blocksRaycasts = false;
+            Destroy(gameObject);
         }
     }
 }
