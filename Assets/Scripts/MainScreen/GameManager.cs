@@ -141,11 +141,10 @@ namespace MainScreen
             _forge.Clear();
         }
 
-        public async void EraseData()
+        public void EraseData()
         {
             Persistence.EraseData();
-            PlayerPrefs.SetInt(Constants.UserScoresKey, 0);
-            PlayerPrefs.SetInt(Constants.OpenedElementsKey, 4);
+            PlayerPrefs.DeleteAll();
         }
         
         private void AddNewElement(Element element)

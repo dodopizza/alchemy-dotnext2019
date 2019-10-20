@@ -374,7 +374,7 @@ GameObject:
   - component: {fileID: 2283562036862562255}
   - component: {fileID: 2283562036862562253}
   m_Layer: 0
-  m_Name: ModalWindow
+  m_Name: NewElementWindow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -416,7 +416,7 @@ CanvasGroup:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2283562036862562099}
   m_Enabled: 1
-  m_Alpha: 0
+  m_Alpha: 1
   m_Interactable: 1
   m_BlocksRaycasts: 0
   m_IgnoreParentGroups: 0
@@ -435,7 +435,6 @@ MonoBehaviour:
   duration: 0.2
   elementName: {fileID: 2283562035984621542}
   elementDescription: {fileID: 2283562036497664608}
-  mixPoint: {fileID: 0}
 --- !u!114 &2283562036862562253
 MonoBehaviour:
   m_ObjectHideFlags: 0
