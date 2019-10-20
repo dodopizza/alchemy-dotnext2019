@@ -76,7 +76,7 @@ namespace MainScreen
         {
             _elementImage.color = Color.clear;
 
-            await Instantiate(floatingElementPrefab, _gameManager.CanvasTransform)
+            await Instantiate(floatingElementPrefab, _gameManager.UnderUpperLayerTransform)
                 .GetComponent<FloatingElement>()
                 .Run(
                     _elementImage.transform.position,

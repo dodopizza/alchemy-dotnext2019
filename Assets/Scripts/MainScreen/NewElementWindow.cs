@@ -4,36 +4,24 @@ using UnityEngine.UI;
 
 namespace MainScreen
 {
-    public class ModalWindow : MonoBehaviour
+    public class NewElementWindow : MonoBehaviour
     {
         public float duration = 0.2f;
         
         public Text elementName;
         public Text elementDescription;
-        public MixPoint mixPoint;
         private CanvasGroup _canvasGroup;
-        
-        private void Start()
-        {
-            _canvasGroup = GetComponent<CanvasGroup>();
-        }
+        private MixPoint _mixPoint;
 
-        public async Task Show(string elementName, string elementDescription)
+        public void Initialize(MixPoint mixPoint, string elementName, string elementDescription)
         {
+            _mixPoint = mixPoint;
+            _canvasGroup = GetComponent<CanvasGroup>();
             this.elementName.text = elementName;
             this.elementDescription.text = elementDescription;
-            await Show();
-            _canvasGroup.blocksRaycasts = true;
         }
 
-        public void Hide()
-        {
-            mixPoint.Erase();
-            _canvasGroup.alpha = 0f;
-            _canvasGroup.blocksRaycasts = false;
-        }
-
-        private async Task Show()
+        public async Task Show()
         {
             float t = 0;
             
@@ -47,6 +35,14 @@ namespace MainScreen
                 await Task.Delay(ms);
             }
             _canvasGroup.alpha = 1f;
+            _canvasGroup.blocksRaycasts = true;
+        }
+        
+        public void Hide()
+        {
+            _mixPoint.Erase();
+            _canvasGroup.alpha = 0f;
+            _canvasGroup.blocksRaycasts = false;
         }
     }
 }

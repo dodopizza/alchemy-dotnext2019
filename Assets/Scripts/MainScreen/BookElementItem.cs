@@ -40,7 +40,7 @@ namespace MainScreen
         
         private Task SendElementToForge(ForgeSlot mixElement)
         {
-            return Instantiate(floatingElementPrefab, _gameManager.CanvasTransform)
+            return Instantiate(floatingElementPrefab, _gameManager.UnderUpperLayerTransform)
                 .GetComponent<FloatingElement>()
                 .Run(
                     _image.transform.position,

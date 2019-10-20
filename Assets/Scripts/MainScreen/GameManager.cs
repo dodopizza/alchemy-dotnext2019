@@ -13,10 +13,12 @@ namespace MainScreen
         public ForgeSlot forgeSlotOne;
         public ForgeSlot forgeSlotTwo;
         public MixPoint mixPoint;
-        public GameObject canvas;
+        public GameObject underUpperLayer;
         public GameObject elementItemPrefab;
+        public GameObject newElementWindowPrefab;
         public GameObject elementsBook;
-        public ModalWindow modalWindow;
+
+//        public ModalWindow modalWindow;
 
         private IRecipeBook _recipeBook;
         private IForge _forge;
@@ -36,7 +38,7 @@ namespace MainScreen
             return true;
         }
 
-        public Transform CanvasTransform => canvas.transform;
+        public Transform UnderUpperLayerTransform => underUpperLayer.transform;
         
         public ForgeSlot EmptyForgeSlot => forgeSlotOne.IsEmpty ? forgeSlotOne : forgeSlotTwo;
 
@@ -90,7 +92,14 @@ namespace MainScreen
                     if (mixResult.IsNewlyCreated)
                     {
                         var element = mixResult.Element;
-                        await modalWindow.Show($"Вы собрали {element.Name}!", element.Description);
+                        var newElementWindow = Instantiate(newElementWindowPrefab, UnderUpperLayerTransform)
+                            .GetComponent<NewElementWindow>();
+                            
+                        newElementWindow.Initialize(
+                            mixPoint, 
+                            $"Вы собрали {element.Name}!", 
+                            element.Description);
+                        await newElementWindow.Show();
                         AddElementScores(element.Score);
                         AddNewElement(element);
                     }
@@ -102,7 +111,7 @@ namespace MainScreen
             }
             else
             {
-                await modalWindow.Show(null, "Что-то пошло не так!");
+//                await modalWindow.Show(null, "Что-то пошло не так!");
                 forgeSlotTwo.Erase();
             }
         }

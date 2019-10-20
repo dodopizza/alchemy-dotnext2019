@@ -14,7 +14,6 @@ namespace RatingScreen
 		public GameObject ratingPrefab;
 		public GameObject threeDotsPrefab;
 
-		// Start is called before the first frame update
 		void Start()
 		{
 			var ratingFetcher = new DummyRatingFetcher();
