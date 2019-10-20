@@ -1,5 +1,4 @@
 using System;
-using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -11,18 +10,25 @@ namespace LoginScreen
     {
         public InputField inputField;
         
+        private GameObject _somethingWrongWindowPrefab;
+
         private void Start()
         {
             if (PlayerPrefs.HasKey(Constants.UserIdKey))
             {
                 SceneManager.LoadSceneAsync("MainScreen");
             }
+            
+            _somethingWrongWindowPrefab = (GameObject) Resources.Load("Prefabs/SomethingWrongWindow", typeof(GameObject));
         }
 
         public async void Login()
         {
             var userId = Guid.NewGuid().ToString();
-            var userName = inputField.text;
+            var userName = inputField.text.Trim();
+
+            if (string.IsNullOrEmpty(userName))
+                return;
             
             var loginRequest = new LoginRequest
             {
@@ -39,7 +45,7 @@ namespace LoginScreen
                 if (!request.isHttpError && !request.isNetworkError)
                 {
                     Debug.Log(request.error);
-                    // todo: показать окно, что что-то пошло не так
+                    Instantiate(_somethingWrongWindowPrefab);
                 }
                 
                 PlayerPrefs.SetString(Constants.UserIdKey, userId);
