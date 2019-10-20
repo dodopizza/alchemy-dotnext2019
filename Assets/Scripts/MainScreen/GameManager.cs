@@ -14,12 +14,12 @@ namespace MainScreen
         public ForgeSlot forgeSlotTwo;
         public MixPoint mixPoint;
         public GameObject underUpperLayer;
-        public GameObject elementItemPrefab;
-        public GameObject newElementWindowPrefab;
-        public GameObject confirmExitWindowPrefab;
-
         public GameObject elementsBook;
 
+        private GameObject _elementItemPrefab;
+        private GameObject _newElementWindowPrefab;
+        private GameObject _confirmExitWindowPrefab;
+        private GameObject _somethingWrongWindowPrefab;
 
         private IRecipeBook _recipeBook;
         private IForge _forge;
@@ -63,6 +63,11 @@ namespace MainScreen
             _recipeBook = new RecipeBook();
             _forge = new Forge(_recipeBook, new NetworkMixChecker());
 
+            _elementItemPrefab = (GameObject) Resources.Load("Prefabs/ElementItem", typeof(GameObject));
+            _newElementWindowPrefab = (GameObject) Resources.Load("Prefabs/NewElementWindow", typeof(GameObject));
+            _somethingWrongWindowPrefab = (GameObject) Resources.Load("Prefabs/SomethingWrongWindow", typeof(GameObject));
+            _confirmExitWindowPrefab = (GameObject) Resources.Load("Prefabs/ConfirmExitWindow", typeof(GameObject));
+            
             var initialElements = await _recipeBook.LoadInitialElements();
             InitializeElements(initialElements);
             InitializeScores(initialElements);
@@ -78,7 +83,7 @@ namespace MainScreen
 
         public void Exit()
         {
-            Instantiate(confirmExitWindowPrefab, UnderUpperLayerTransform);
+            Instantiate(_confirmExitWindowPrefab, UnderUpperLayerTransform);
         }
         
         public async Task PerformMix()
@@ -100,7 +105,7 @@ namespace MainScreen
                     if (mixResult.IsNewlyCreated)
                     {
                         var element = mixResult.Element;
-                        var newElementWindow = Instantiate(newElementWindowPrefab, UnderUpperLayerTransform)
+                        var newElementWindow = Instantiate(_newElementWindowPrefab, UnderUpperLayerTransform)
                             .GetComponent<NewElementWindow>();
                             
                         newElementWindow.Initialize(
@@ -119,7 +124,7 @@ namespace MainScreen
             }
             else
             {
-//                await modalWindow.Show(null, "Что-то пошло не так!");
+                Instantiate(_somethingWrongWindowPrefab, UnderUpperLayerTransform);
                 forgeSlotTwo.Erase();
             }
         }
@@ -149,7 +154,7 @@ namespace MainScreen
         
         private void AddNewElement(Element element)
         {
-            Instantiate(elementItemPrefab, elementsBook.transform)
+            Instantiate(_elementItemPrefab, elementsBook.transform)
                 .GetComponent<BookElementItem>()
                 .SetUp(element);
         }
