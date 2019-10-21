@@ -6,80 +6,76 @@ using Utils;
 
 namespace Domain
 {
-    public class NetworkMixChecker : Interfaces.IMixChecker
-    {
-        private readonly string _userId;
+	public class NetworkMixChecker : Interfaces.IMixChecker
+	{
+		private readonly string _userId;
 
-        public NetworkMixChecker()
-        {
-            _userId = PlayerPrefs.GetString(Constants.UserIdKey);
-        }
-        
-        public async Task<OperationResult<CheckResult>> Check(Guid firstElementId, Guid secondElementId)
-        {
-            var checkRequest = new CheckRequest
-            {
-                FirstElement = firstElementId.ToString(),
-                SecondElement = secondElementId.ToString(),
-                UserId = _userId
-            };
-            
-            //todo: retry
-            using (var request = HttpClient.CreateApiPostRequest(Constants.ApiUrl + "/api/Elements/merge", checkRequest))
-            {
-                request.timeout = Constants.RpcTimeoutSeconds;
-                
-                await request.SendWebRequest();
+		public NetworkMixChecker()
+		{
+			_userId = PlayerPrefs.GetString(Constants.UserIdKey);
+		}
 
-                if (!request.isHttpError && !request.isNetworkError)
-                {
-                    var intermediateResult = JsonUtility.FromJson<InternalCheckResult>(request.downloadHandler.text);
+		public async Task<OperationResult<CheckResult>> Check(Guid firstElementId, Guid secondElementId)
+		{
+			var checkRequest = new CheckRequest
+			{
+				FirstElement = firstElementId.ToString(),
+				SecondElement = secondElementId.ToString(),
+				UserId = _userId
+			};
 
-                    if (intermediateResult.isSuccess)
-                    {
-                        return OperationResult<CheckResult>.Success(
-                            CheckResult.Success(
-                                intermediateResult.mergeResultElement.id,
-                                intermediateResult.mergeResultElement.imageName,
-                                intermediateResult.mergeResultElement.name,
-                                intermediateResult.mergeResultElement.score,
-                                intermediateResult.mergeResultElement.description));
-                    }
-                    
-                    return OperationResult<CheckResult>.Success(CheckResult.Failure());
-                }
 
-                return OperationResult<CheckResult>.Failure();
-            }
-        }
- 
-        private class CheckRequest
-        {
-            public string FirstElement;
+			InternalCheckResult intermediateResult;
+			try
+			{
+				var url = Constants.ApiUrl + "/api/Elements/merge";
+				intermediateResult = await HttpClient.PostWithRetry<InternalCheckResult>(url, checkRequest);
+			}
+			catch
+			{
+				return OperationResult<CheckResult>.Failure();
+			}
 
-            public string SecondElement;
+			if (intermediateResult.isSuccess)
+			{
+				return OperationResult<CheckResult>.Success(
+					CheckResult.Success(
+						intermediateResult.mergeResultElement.id,
+						intermediateResult.mergeResultElement.imageName,
+						intermediateResult.mergeResultElement.name,
+						intermediateResult.mergeResultElement.score,
+						intermediateResult.mergeResultElement.description));
+			}
 
-            public string UserId;
-        }
+			return OperationResult<CheckResult>.Success(CheckResult.Failure());
+		}
 
-        [Serializable]
-        private class InternalCheckResult
-        {
-            public bool isSuccess;
+		private class CheckRequest
+		{
+			public string FirstElement;
 
-            public MergeResultElement mergeResultElement;
-            
-        }
-        
-        [Serializable]
-        private class MergeResultElement
-        {
-            public string id;
-            public string imageName;
-            public int score;
-            public string name;
-            public string description;
-            public bool isBaseElement;
-        }
-    }
+			public string SecondElement;
+
+			public string UserId;
+		}
+
+		[Serializable]
+		private class InternalCheckResult
+		{
+			public bool isSuccess;
+
+			public MergeResultElement mergeResultElement;
+		}
+
+		[Serializable]
+		private class MergeResultElement
+		{
+			public string id;
+			public string imageName;
+			public int score;
+			public string name;
+			public string description;
+			public bool isBaseElement;
+		}
+	}
 }

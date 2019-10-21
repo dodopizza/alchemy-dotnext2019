@@ -12,24 +12,20 @@ namespace Domain
     {
         public static async Task<OperationResult<IEnumerable<Element>>> GetBaseElements()
         {
-            //todo: retry
-            using (var request = HttpClient.CreateApiGetRequest(Constants.ApiUrl + "/api/Elements/base"))
+            BaseElements intermediateResult = null;
+            try
             {
-                request.timeout = Constants.RpcTimeoutSeconds;
-                
-                await request.SendWebRequest();
-
-                if (!request.isHttpError && !request.isNetworkError)
-                {
-                    var intermediateResult = JsonUtility.FromJson<BaseElements>(request.downloadHandler.text);
-
-                    var elements = intermediateResult.elements.Select(r =>
-                        new Element(new Guid(r.id), r.imageName, r.name, r.score, r.description));
-                    return OperationResult<IEnumerable<Element>>.Success(elements);
-                }
-
+                var url = Constants.ApiUrl + "/api/Elements/base";
+                intermediateResult = await HttpClient.GetWithRetries<BaseElements>(url);
+            }
+            catch
+            {
                 return OperationResult<IEnumerable<Element>>.Failure();
             }
+            
+            var elements = intermediateResult.elements.Select(r =>
+                new Element(new Guid(r.id), r.imageName, r.name, r.score, r.description));
+            return OperationResult<IEnumerable<Element>>.Success(elements);
         }
 
         [Serializable]

@@ -36,22 +36,20 @@ namespace LoginScreen
                 Name = userName
             };
 
-            using (var request = HttpClient.CreateApiPostRequest(Constants.ApiUrl + "/api/UserProfile/add", loginRequest))
+            try
             {
-                request.timeout = Constants.RpcTimeoutSeconds;
-
-                await request.SendWebRequest();
-                
-                if (!request.isHttpError && !request.isNetworkError)
-                {
-                    Debug.Log(request.error);
-                    Instantiate(_somethingWrongWindowPrefab);
-                }
-                
-                PlayerPrefs.SetString(Constants.UserIdKey, userId);
-                PlayerPrefs.Save();
-                SceneManager.LoadSceneAsync("MainScreen");
+                var url = Constants.ApiUrl + "/api/UserProfile/add";
+                await HttpClient.PostWithRetry(url, loginRequest);
             }
+            catch (Exception ex)
+            {
+                Debug.Log(ex);
+                Instantiate(_somethingWrongWindowPrefab);
+            }
+
+            PlayerPrefs.SetString(Constants.UserIdKey, userId);
+            PlayerPrefs.Save();
+            SceneManager.LoadSceneAsync("MainScreen");
         }
 
         private class LoginRequest

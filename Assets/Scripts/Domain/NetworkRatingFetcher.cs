@@ -19,45 +19,40 @@ namespace Domain
         
         public async Task<OperationResult<RatingEntry[]>> GetTopRating()
         {
-            using (var request = HttpClient.CreateApiGetRequest(Constants.ApiUrl + "/api/Stats/ladder/20"))
+            Players intermediateResult = null;
+            try
             {
-                request.timeout = Constants.RpcTimeoutSeconds;
-                
-                await request.SendWebRequest();
-
-                if (!request.isHttpError && !request.isNetworkError)
-                {
-                    var intermediateResult = JsonUtility.FromJson<Players>(request.downloadHandler.text);
-                    var ratingEntries = intermediateResult.players.Select(r =>
-                        new RatingEntry(r.name, r.score, r.elementCount, r.place)).ToArray();
-                    return OperationResult<RatingEntry[]>.Success(ratingEntries);
-                }
-
+                var url = Constants.ApiUrl + "/api/Stats/ladder/20";
+                intermediateResult = await HttpClient.GetWithRetries<Players>(url);
+            }
+            catch
+            {
                 return OperationResult<RatingEntry[]>.Failure();
             }
+
+            var ratingEntries = intermediateResult.players.Select(r =>
+                new RatingEntry(r.name, r.score, r.elementCount, r.place)).ToArray();
+            return OperationResult<RatingEntry[]>.Success(ratingEntries);
         }
 
         public async Task<OperationResult<RatingEntry>> GetMyRating()
         {
-            using (var request = HttpClient.CreateApiGetRequest(Constants.ApiUrl + $"/api/UserProfile/get/{_userId}"))
+            Player result = null;
+            try
             {
-                request.timeout = Constants.RpcTimeoutSeconds;
-                
-                await request.SendWebRequest();
-
-                if (!request.isHttpError && !request.isNetworkError)
-                {
-                    var result = JsonUtility.FromJson<Player>(request.downloadHandler.text);
-
-                    return OperationResult<RatingEntry>.Success(new RatingEntry(
-                        result.name,
-                        result.score,
-                        result.elementCount,
-                        result.place));
-                }
-
+                var url = Constants.ApiUrl + $"/api/UserProfile/get/{_userId}";
+                result = await HttpClient.GetWithRetries<Player>(url);
+            }
+            catch
+            {
                 return OperationResult<RatingEntry>.Failure();
             }
+
+            return OperationResult<RatingEntry>.Success(new RatingEntry(
+                result.name,
+                result.score,
+                result.elementCount,
+                result.place));
         }
         
         [Serializable]
