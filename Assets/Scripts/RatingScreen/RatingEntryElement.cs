@@ -16,7 +16,7 @@ public class RatingEntryElement : MonoBehaviour
 
     public void Setup(Domain.Models.RatingEntry entry, bool isOwn)
     {
-        text.text = $"{entry.Position}. {entry.Nickname}: {entry.Rating}";
+        text.text = $"{entry.Position}. {entry.Nickname}: {entry.Score}";
         if (isOwn)
         {
             if (ColorUtility.TryParseHtmlString("#32FF32", out var green))

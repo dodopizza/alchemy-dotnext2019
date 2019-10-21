@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using Domain;
 using Domain.Models;
 using UnityEngine;
-using DummyRatingFetcher = Domain.Dummy.DummyRatingFetcher;
 
 namespace RatingScreen
 {
@@ -16,7 +15,7 @@ namespace RatingScreen
 
 		void Start()
 		{
-			var ratingFetcher = new DummyRatingFetcher();
+			var ratingFetcher = new NetworkRatingFetcher();
 
 			var topRatingTask = ratingFetcher.GetTopRating();
 			var myRatingTask = ratingFetcher.GetMyRating();
