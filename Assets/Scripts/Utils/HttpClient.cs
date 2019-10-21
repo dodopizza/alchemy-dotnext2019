@@ -4,7 +4,7 @@ using UnityEngine.Networking;
 
 namespace Utils
 {
-    public class HttpClient
+    public static class HttpClient
     {
         public static UnityWebRequest CreateApiGetRequest(string url, object body = null)
         {
