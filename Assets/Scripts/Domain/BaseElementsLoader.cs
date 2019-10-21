@@ -21,9 +21,7 @@ namespace Domain
 
                 if (!request.isHttpError && !request.isNetworkError)
                 {
-                    var text = request.downloadHandler.text;
-                    text = "{\"elements\":" + text + "}";
-                    var intermediateResult = JsonUtility.FromJson<BaseElements>(text);
+                    var intermediateResult = JsonUtility.FromJson<BaseElements>(request.downloadHandler.text);
 
                     var elements = intermediateResult.elements.Select(r =>
                         new Element(new Guid(r.id), r.imageName, r.name, r.score, r.description));

@@ -27,10 +27,7 @@ namespace Domain
 
                 if (!request.isHttpError && !request.isNetworkError)
                 {
-                    var text = request.downloadHandler.text;
-                    text = "{\"players\":" + text + "}";
-                    var intermediateResult = JsonUtility.FromJson<Players>(text);
-
+                    var intermediateResult = JsonUtility.FromJson<Players>(request.downloadHandler.text);
                     var ratingEntries = intermediateResult.players.Select(r =>
                         new RatingEntry(r.name, r.score, r.elementCount, r.place)).ToArray();
                     return OperationResult<RatingEntry[]>.Success(ratingEntries);
