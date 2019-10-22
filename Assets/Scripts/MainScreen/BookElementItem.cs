@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 namespace MainScreen
 {
-    public class BookElementItem : MonoBehaviour, IPointerDownHandler
+    public class BookElementItem : MonoBehaviour, IPointerClickHandler
     {
         public GameObject floatingElementPrefab;
 
@@ -27,17 +27,6 @@ namespace MainScreen
             _element = element;
         }
 
-        public async void OnPointerDown(PointerEventData eventData)
-        {
-            if (!_gameManager.CheckAndLockInput()) 
-                return;
-
-            _gameManager.AddElementToForge(_element);
-            
-            var mixElement = _gameManager.EmptyForgeSlot;
-            await _gameManager.HandleUiOperation(SendElementToForge(mixElement));
-        }
-        
         private Task SendElementToForge(ForgeSlot mixElement)
         {
             return Instantiate(floatingElementPrefab, _gameManager.UnderUpperLayerTransform)
@@ -47,6 +36,17 @@ namespace MainScreen
                     mixElement.transform.position,
                     _element.Sprite,
                     () => mixElement.ChangeSprite(_element.Sprite));
+        }
+
+        public async void OnPointerClick(PointerEventData eventData)
+        {
+            if (!_gameManager.CheckAndLockInput()) 
+                return;
+
+            _gameManager.AddElementToForge(_element);
+            
+            var mixElement = _gameManager.EmptyForgeSlot;
+            await _gameManager.HandleUiOperation(SendElementToForge(mixElement));
         }
     }
 }

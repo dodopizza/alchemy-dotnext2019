@@ -5,6 +5,7 @@ using Domain;
 using Domain.Interfaces;
 using Domain.Models;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 namespace MainScreen
 {
@@ -60,6 +61,12 @@ namespace MainScreen
 
         private async void Start()
         {
+            var defaultValue = EventSystem.current.pixelDragThreshold;		
+            EventSystem.current.pixelDragThreshold = 
+                Mathf.Max(
+                    defaultValue , 
+                    (int) (defaultValue * Screen.dpi / 160f));
+            
             _recipeBook = new RecipeBook();
             _forge = new Forge(_recipeBook, new NetworkMixChecker());
 
@@ -149,7 +156,7 @@ namespace MainScreen
         public void EraseData()
         {
             Persistence.EraseData();
-            PlayerPrefs.DeleteAll();
+            //PlayerPrefs.DeleteAll();
         }
         
         private void AddNewElement(Element element)
