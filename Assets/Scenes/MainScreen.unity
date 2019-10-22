@@ -802,12 +802,6 @@ MonoBehaviour:
   forgeSlotTwo: {fileID: 1237081299}
   mixPoint: {fileID: 801046164}
   underUpperLayer: {fileID: 1553398310}
-  elementItemPrefab: {fileID: 7274985115859191361, guid: 5fb9738c4a3864d56b64cc4be662b57f,
-    type: 3}
-  newElementWindowPrefab: {fileID: 2283562036862562099, guid: cfa0c46b704c94b928b8670044604dfd,
-    type: 3}
-  confirmExitWindowPrefab: {fileID: 2283562036862562099, guid: fe1053b2fd8fe47549a1f8f741425ca3,
-    type: 3}
   elementsBook: {fileID: 1951933985}
 --- !u!4 &185953000
 Transform:
@@ -2258,7 +2252,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &823663557
 RectTransform:
   m_ObjectHideFlags: 0

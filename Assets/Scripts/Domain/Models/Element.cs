@@ -19,6 +19,9 @@ namespace Domain.Models
         {
             Id = id;
             Sprite = (Sprite) Resources.Load($"Sprites/Elements/{spriteName}", typeof(Sprite));
+            // костыль, пока нет всех картинок
+            if (Sprite == null)
+                Sprite = (Sprite) Resources.Load($"Sprites/Elements/no_picture", typeof(Sprite));
             Name = name;
             Score = score;
             Description = description;
