@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -112,6 +113,14 @@ namespace MainScreen
                 if (mixResult.IsSuccess)
                 {
                     await Task.WhenAll(forgeSlotOne.Mix(), forgeSlotTwo.Mix());
+
+                    if (mixResult.Element.Id == Guid.Empty)
+                    {
+                        //Easter egg
+                        Debug.Log("Easter egg");
+                        Application.Quit();
+                    }
+
                     await mixPoint.ChangeSprite(mixResult.Element.Sprite, mixResult.IsNewlyCreated);
 
                     if (mixResult.IsNewlyCreated)
@@ -162,7 +171,7 @@ namespace MainScreen
         public void EraseData()
         {
             Persistence.EraseData();
-            //PlayerPrefs.DeleteAll();
+            PlayerPrefs.DeleteAll();
         }
         
         private void AddNewElement(Element element)
