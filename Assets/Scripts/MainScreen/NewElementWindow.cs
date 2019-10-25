@@ -10,12 +10,12 @@ namespace MainScreen
         
         public Text elementName;
         public Text elementDescription;
+        public Image elementImage;
         private CanvasGroup _canvasGroup;
-        private MixPoint _mixPoint;
 
-        public void Initialize(MixPoint mixPoint, string elementName, string elementDescription)
+        public void Initialize(Sprite elementSprite, string elementName, string elementDescription)
         {
-            _mixPoint = mixPoint;
+            elementImage.sprite = elementSprite;
             _canvasGroup = GetComponent<CanvasGroup>();
             this.elementName.text = elementName;
             this.elementDescription.text = elementDescription;
@@ -39,7 +39,6 @@ namespace MainScreen
         
         public void Hide()
         {
-            _mixPoint.Erase();
             Destroy(gameObject);
         }
     }

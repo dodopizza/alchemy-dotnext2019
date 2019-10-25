@@ -121,10 +121,11 @@ namespace MainScreen
                             .GetComponent<NewElementWindow>();
                             
                         newElementWindow.Initialize(
-                            mixPoint, 
+                            element.Sprite, 
                             $"Вы собрали {element.Name}!", 
                             element.Description);
                         await newElementWindow.Show();
+                        mixPoint.Erase();
                         AddElementScores(element.Score);
                         AddNewElement(element);
                     }
