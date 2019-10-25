@@ -40,6 +40,11 @@ namespace MainScreen
             return true;
         }
 
+        public void UnlockInput()
+        {
+            _inputLocked = false;
+        }
+
         public Transform UnderUpperLayerTransform => underUpperLayer.transform;
         
         public ForgeSlot EmptyForgeSlot => forgeSlotOne.IsEmpty ? forgeSlotOne : forgeSlotTwo;
@@ -82,7 +87,7 @@ namespace MainScreen
 
         private void Update()
         {
-            if (Input.GetKeyDown(KeyCode.Escape))
+            if (Input.GetKeyDown(KeyCode.Escape) && !_inputLocked)
             {
                 Exit();
             }
