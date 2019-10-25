@@ -24,9 +24,8 @@ namespace MainScreen
         public async Task Show()
         {
             float t = 0;
-            
-            var waitForSeconds = duration * 0.05f;
-            var ms = (int)(waitForSeconds * 1000);
+
+            var ms = (int)(duration * 50);
 
             while (t <= 1)
             {

@@ -59,12 +59,11 @@ namespace MainScreen
         {
             float t = 0;
             
-            var waitForSeconds = duration * 0.05f;
-            var ms = (int)(waitForSeconds * 1000);
+            var ms = (int)(duration * 50);
 
             while (t <= 1)
             {
-                _elementImage.color = Color.Lerp(Color.white, Color.clear, t);
+                _elementImage.color = Color.Lerp(Color.white, Color.clear, Mathf.SmoothStep(0f, 1f, t));
                 t += 0.05f;
                 await Task.Delay(ms);
             }

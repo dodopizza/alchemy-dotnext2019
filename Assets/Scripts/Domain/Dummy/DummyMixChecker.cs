@@ -10,16 +10,17 @@ namespace Domain.Dummy
         public Task<OperationResult<CheckResult>> Check(Guid firstElementId, Guid secondElementId)
         {
             Debug.Log("Remote call!");
-            if (UnityEngine.Random.Range(0, 2) == 1)
-            {
-                return ReturnResult(CheckResult.Success(
-                    "fd540609-4bb5-4b96-bde0-167ee8e283c6", 
-                    "электричество",
-                    "электричество",
-                    10, 
-                    "description"));
-            }
+//            if (UnityEngine.Random.Range(0, 2) == 1)
+//            {
+//                return ReturnResult(CheckResult.Success(
+//                    "fd540609-4bb5-4b96-bde0-167ee8e283c6", 
+//                    "электричество",
+//                    "электричество",
+//                    10, 
+//                    "description"));
+//            }
 
+            return Task.FromResult(OperationResult<CheckResult>.Failure());
             return ReturnResult(CheckResult.Failure());
         }
 
