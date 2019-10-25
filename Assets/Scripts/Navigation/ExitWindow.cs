@@ -1,4 +1,3 @@
-using System;
 using MainScreen;
 using UnityEngine;
 
