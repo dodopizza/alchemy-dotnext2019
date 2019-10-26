@@ -12,7 +12,7 @@ namespace Domain
         private Dictionary<Guid, Element> _openedElements;
         private readonly Dictionary<(Guid firstId, Guid secondId), Guid> _openedRecipes;
 
-        public async Task<List<Element>> LoadInitialElements()
+        public async Task<OperationResult<IEnumerable<Element>>> LoadInitialElements()
         {
             _openedElements = Persistence.LoadElements();
 
@@ -25,9 +25,13 @@ namespace Domain
                     _openedElements = getInitialElements.Data.ToDictionary(e => e.Id, e => e);
                     Persistence.SaveElements(_openedElements);
                 }
+                else
+                {
+                    return OperationResult<IEnumerable<Element>>.Failure();
+                }
             }
 
-            return _openedElements.Values.ToList();
+            return OperationResult<IEnumerable<Element>>.Success(_openedElements.Values);
         }
 
         public RecipeBook()

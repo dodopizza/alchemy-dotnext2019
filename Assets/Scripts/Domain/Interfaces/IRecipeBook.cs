@@ -13,6 +13,6 @@ namespace Domain.Interfaces
         
         bool TryGetPreviousResult(Guid firstElementId, Guid secondElementId, out Element element);
 
-        Task<List<Element>> LoadInitialElements();
+        Task<OperationResult<IEnumerable<Element>>> LoadInitialElements();
     }
 }

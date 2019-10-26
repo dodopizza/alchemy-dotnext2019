@@ -77,9 +77,18 @@ namespace MainScreen
             _somethingWrongWindowPrefab = (GameObject) Resources.Load("Prefabs/SomethingWrongWindow", typeof(GameObject));
             _confirmExitWindowPrefab = (GameObject) Resources.Load("Prefabs/ConfirmExitWindow", typeof(GameObject));
             
-            var initialElements = await _recipeBook.LoadInitialElements();
-            InitializeElements(initialElements);
-            InitializeScores(initialElements);
+            var loadInitialElements = await _recipeBook.LoadInitialElements();
+
+            if (loadInitialElements.IsSuccess)
+            {
+                var initialElements = loadInitialElements.Data.ToList();
+                InitializeElements(initialElements);
+                InitializeScores(initialElements);
+            }
+            else
+            {
+                Instantiate(_somethingWrongWindowPrefab, UnderUpperLayerTransform);
+            }
         }
 
         private static void SetDragThreshold()

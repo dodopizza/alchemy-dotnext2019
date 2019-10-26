@@ -16,7 +16,7 @@ namespace Domain
             try
             {
                 var url = Constants.ApiUrl + "/api/Elements/base";
-                intermediateResult = await HttpClient.GetWithRetries<BaseElements>(url);
+                intermediateResult = await HttpClient.GetWithRetries<BaseElements>(url, 5);
             }
             catch
             {
