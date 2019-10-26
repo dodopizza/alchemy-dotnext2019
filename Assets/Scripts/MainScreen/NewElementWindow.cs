@@ -10,15 +10,17 @@ namespace MainScreen
         
         public Text elementName;
         public Text elementDescription;
+        public Text elementScore;
         public Image elementImage;
         private CanvasGroup _canvasGroup;
 
-        public void Initialize(Sprite elementSprite, string elementName, string elementDescription)
+        public void Initialize(Sprite elementSprite, string name, int score, string description)
         {
             elementImage.sprite = elementSprite;
             _canvasGroup = GetComponent<CanvasGroup>();
-            this.elementName.text = elementName;
-            this.elementDescription.text = elementDescription;
+            elementName.text = name;
+            elementScore.text = $"{score} {ScoreEndings(score)}";
+            elementDescription.text = description;
         }
 
         public async Task Show()
@@ -40,6 +42,23 @@ namespace MainScreen
         public void Hide()
         {
             Destroy(gameObject);
+        }
+
+        private string ScoreEndings(int score)
+        {
+            var lastNumber = score % 10;
+
+            switch (lastNumber)
+            {
+                case 1:
+                    return "очко";
+                case 2:
+                case 3:
+                case 4:
+                    return "очка";
+                default:
+                    return "очков";
+            }
         }
     }
 }

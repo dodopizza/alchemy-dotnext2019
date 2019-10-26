@@ -131,10 +131,7 @@ namespace MainScreen
                         var newElementWindow = Instantiate(_newElementWindowPrefab, UnderUpperLayerTransform)
                             .GetComponent<NewElementWindow>();
                             
-                        newElementWindow.Initialize(
-                            element.Sprite, 
-                            $"Вы собрали {element.Name}!", 
-                            element.Description);
+                        newElementWindow.Initialize(element.Sprite, element.Name, element.Score, element.Description);
                         await newElementWindow.Show();
                         mixPoint.Erase();
                         AddElementScores(element.Score);
@@ -173,7 +170,7 @@ namespace MainScreen
         public void EraseData()
         {
             Persistence.EraseData();
-            PlayerPrefs.DeleteAll();
+//            PlayerPrefs.DeleteAll();
         }
         
         private void AddNewElement(Element element)
