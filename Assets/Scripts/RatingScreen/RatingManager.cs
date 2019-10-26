@@ -12,9 +12,14 @@ namespace RatingScreen
 		public GameObject canvas;
 		public GameObject ratingPrefab;
 		public GameObject threeDotsPrefab;
+		public GameObject underUpperLayer;
 
-		void Start()
+		private GameObject _somethingWrongWindowPrefab;
+
+		private void Start()
 		{
+			_somethingWrongWindowPrefab = (GameObject) Resources.Load("Prefabs/SomethingWrongWindow", typeof(GameObject));
+
 			var ratingFetcher = new NetworkRatingFetcher();
 
 			var topRatingTask = ratingFetcher.GetTopRating();
@@ -30,7 +35,7 @@ namespace RatingScreen
 				    || myRatingTask.IsCanceled
 				    || myRatingTask.IsFaulted)
 				{
-					// TODO error
+					Instantiate(_somethingWrongWindowPrefab, underUpperLayer.transform);
 				}
 
 				var topRatingResult = topRatingTask.Result;
@@ -38,14 +43,14 @@ namespace RatingScreen
 
 				if (!topRatingResult.IsSuccess || !myRatingResult.IsSuccess)
 				{
-					// TODO error
+					Instantiate(_somethingWrongWindowPrefab, underUpperLayer.transform);
 				}
 
 				RenderRatings(topRatingResult.Data, myRatingResult.Data);
 			}, TaskScheduler.FromCurrentSynchronizationContext());
 		}
 
-		void RenderRatings(IEnumerable<RatingEntry> top, RatingEntry own)
+		private void RenderRatings(IEnumerable<RatingEntry> top, RatingEntry own)
 		{
 			// re-sort just in case
 			var orderedRatings = top.OrderBy(x => x.Position).ToArray();
@@ -69,7 +74,7 @@ namespace RatingScreen
 			}
 		}
 
-		private void RenderPlayerWayOutOfTop(RatingEntry own, RatingEntry[] orderedRatings)
+		private void RenderPlayerWayOutOfTop(RatingEntry own, IEnumerable<RatingEntry> orderedRatings)
 		{
 			foreach (var entry in orderedRatings)
 			{
@@ -81,7 +86,7 @@ namespace RatingScreen
 			Instantiate(ratingPrefab, canvas.transform).GetComponent<RatingEntryElement>().Setup(own, true);
 		}
 
-		private void RenderPlayerRightAfterTop(RatingEntry own, RatingEntry[] orderedRatings)
+		private void RenderPlayerRightAfterTop(RatingEntry own, IEnumerable<RatingEntry> orderedRatings)
 		{
 			foreach (var entry in orderedRatings)
 			{
@@ -91,7 +96,7 @@ namespace RatingScreen
 			Instantiate(ratingPrefab, canvas.transform).GetComponent<RatingEntryElement>().Setup(own, true);
 		}
 
-		private void RenderPlayerInTop(RatingEntry own, RatingEntry[] orderedRatings)
+		private void RenderPlayerInTop(RatingEntry own, IEnumerable<RatingEntry> orderedRatings)
 		{
 			foreach (var entry in orderedRatings)
 			{

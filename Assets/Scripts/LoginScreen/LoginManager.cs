@@ -9,7 +9,8 @@ namespace LoginScreen
     public class LoginManager : MonoBehaviour
     {
         public InputField inputField;
-        
+        public GameObject underUpperLayer;
+
         private GameObject _somethingWrongWindowPrefab;
 
         private void Start()
@@ -40,16 +41,16 @@ namespace LoginScreen
             {
                 var url = Constants.ApiUrl + "/api/UserProfile/add";
                 await HttpClient.PostWithRetry(url, loginRequest);
+                
+                PlayerPrefs.SetString(Constants.UserIdKey, userId);
+                PlayerPrefs.Save();
+                SceneManager.LoadSceneAsync("MainScreen");
             }
             catch (Exception ex)
             {
                 Debug.Log(ex);
-                Instantiate(_somethingWrongWindowPrefab);
+                Instantiate(_somethingWrongWindowPrefab, underUpperLayer.transform);
             }
-
-            PlayerPrefs.SetString(Constants.UserIdKey, userId);
-            PlayerPrefs.Save();
-            SceneManager.LoadSceneAsync("MainScreen");
         }
 
         private class LoginRequest

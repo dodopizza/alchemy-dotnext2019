@@ -67,12 +67,8 @@ namespace MainScreen
 
         private async void Start()
         {
-            var defaultValue = EventSystem.current.pixelDragThreshold;		
-            EventSystem.current.pixelDragThreshold = 
-                Mathf.Max(
-                    defaultValue , 
-                    (int) (defaultValue * Screen.dpi / 160f));
-            
+            SetDragThreshold();
+
             _recipeBook = new RecipeBook();
             _forge = new Forge(_recipeBook, new NetworkMixChecker());
 
@@ -84,6 +80,12 @@ namespace MainScreen
             var initialElements = await _recipeBook.LoadInitialElements();
             InitializeElements(initialElements);
             InitializeScores(initialElements);
+        }
+
+        private static void SetDragThreshold()
+        {
+            var defaultValue = EventSystem.current.pixelDragThreshold;
+            EventSystem.current.pixelDragThreshold = Mathf.Max(defaultValue, (int) (defaultValue * Screen.dpi / 160f));
         }
 
         private void Update()
