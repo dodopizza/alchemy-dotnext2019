@@ -184,11 +184,27 @@ namespace MainScreen
         
         private void AddNewElement(Element element)
         {
-            Instantiate(_elementItemPrefab, elementsBook.transform)
-                .GetComponent<BookElementItem>()
-                .SetUp(element);
+            var newElement = Instantiate(_elementItemPrefab, elementsBook.transform);
+                
+            newElement.GetComponent<BookElementItem>().SetUp(element);
+
+            SortBook(newElement.transform);
         }
-        
+
+        private void SortBook(Transform newElementTransform)
+        {
+            var parentTransform = elementsBook.transform;
+            var numberChildren = parentTransform.childCount;
+
+            for (var i = 0; i < numberChildren; i++)
+            {
+                var compareOrdinal = string.CompareOrdinal(parentTransform.GetChild(i).name, newElementTransform.name);
+                if (compareOrdinal <= 0) continue;
+                newElementTransform.SetSiblingIndex(i);
+                return;
+            }
+        }
+
         private void InitializeElements(IEnumerable<Element> elements)
         {
             foreach (var element in elements)

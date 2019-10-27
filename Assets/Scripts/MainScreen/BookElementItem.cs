@@ -28,6 +28,7 @@ namespace MainScreen
         public void SetUp(Element element)
         {
             _element = element;
+            transform.name = element.Name;
         }
 
         private Task SendElementToForge(ForgeSlot mixElement)
@@ -77,7 +78,7 @@ namespace MainScreen
                 .GetComponent<NewElementWindow>();
                                         
             newElementWindow.Initialize(_element.Sprite, _element.Name, _element.Score, _element.Description);
-            await newElementWindow.Show();
+            await _gameManager.HandleUiOperation(newElementWindow.Show());
         }
     }
 }

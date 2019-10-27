@@ -7,7 +7,7 @@ namespace MainScreen
     public class NewElementWindow : MonoBehaviour
     {
         public float duration = 0.2f;
-        
+
         public Text elementName;
         public Text elementDescription;
         public Text elementScore;
@@ -27,7 +27,7 @@ namespace MainScreen
         {
             float t = 0;
 
-            var ms = (int)(duration * 50);
+            var ms = (int) (duration * 50);
 
             while (t <= 1)
             {
@@ -35,10 +35,11 @@ namespace MainScreen
                 t += 0.05f;
                 await Task.Delay(ms);
             }
+
             _canvasGroup.alpha = 1f;
             _canvasGroup.blocksRaycasts = true;
         }
-        
+
         public void Hide()
         {
             Destroy(gameObject);
@@ -46,18 +47,30 @@ namespace MainScreen
 
         private string ScoreEndings(int score)
         {
-            var lastNumber = score % 10;
+            var lastTwoNumbers = score % 100;
 
-            switch (lastNumber)
+            switch (lastTwoNumbers)
             {
-                case 1:
-                    return "очко";
-                case 2:
-                case 3:
-                case 4:
-                    return "очка";
-                default:
+                case 11:
+                case 12:
+                case 13:
+                case 14:
                     return "очков";
+                default:
+                {
+                    var lastNumber = score % 10;
+                    switch (lastNumber)
+                    {
+                        case 1:
+                            return "очко";
+                        case 2:
+                        case 3:
+                        case 4:
+                            return "очка";
+                        default:
+                            return "очков";
+                    }
+                }
             }
         }
     }
