@@ -5,9 +5,6 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 0
-    path: 
-    guid: 00000000000000000000000000000000
   - enabled: 1
     path: Assets/Scenes/LoginScreen.unity
     guid: 282fd78bda18742689799f9f91867e80
@@ -16,7 +13,7 @@ EditorBuildSettings:
     guid: efc1b1ce47ced42c99edfaa218044647
   - enabled: 1
     path: Assets/Scenes/RatingScreen.unity
-    guid: c5e58ff11706e464f837d5328fc13c5f
+    guid: 5ebc83e266a53454899926ac156523cf
   - enabled: 1
     path: Assets/Scenes/InfoScreen.unity
     guid: ff2002451545c48519a2c1604cd85880
