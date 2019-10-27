@@ -179,7 +179,7 @@ namespace MainScreen
         public void EraseData()
         {
             Persistence.EraseData();
-//            PlayerPrefs.DeleteAll();
+            PlayerPrefs.DeleteAll();
         }
         
         private void AddNewElement(Element element)
