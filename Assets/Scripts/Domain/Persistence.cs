@@ -120,7 +120,7 @@ namespace Domain
                 description = element.Description,
                 name = element.Name,
                 scores = element.Score,
-                sprite = element.Sprite?.name ?? "none"
+                sprite = element.SpriteName
             };
         }
 

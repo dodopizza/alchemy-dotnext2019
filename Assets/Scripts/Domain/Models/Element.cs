@@ -9,6 +9,8 @@ namespace Domain.Models
         
         public Sprite Sprite { get; }
         
+        public string SpriteName { get; }
+        
         public string Name { get; }
         
         public int Score { get; }
@@ -18,10 +20,9 @@ namespace Domain.Models
         public Element(Guid id, string spriteName, string name, int score, string description)
         {
             Id = id;
-            Sprite = (Sprite) Resources.Load($"Sprites/Elements/{spriteName}", typeof(Sprite));
-            // костыль, пока нет всех картинок
-            if (Sprite == null)
-                Sprite = (Sprite) Resources.Load($"Sprites/Elements/no_picture", typeof(Sprite));
+            SpriteName = spriteName;
+            Sprite = (Sprite) Resources.Load($"Sprites/Elements/{spriteName}", typeof(Sprite)) ??
+                     (Sprite) Resources.Load($"Sprites/Elements/no_picture", typeof(Sprite));
             Name = name;
             Score = score;
             Description = description;

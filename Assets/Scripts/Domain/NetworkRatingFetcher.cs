@@ -35,7 +35,7 @@ namespace Domain
             return OperationResult<RatingEntry[]>.Success(ratingEntries);
         }
 
-        public async Task<OperationResult<RatingEntry>> GetMyRating()
+        public async Task<OperationResult<PlayerInfo>> GetPlayerInfo()
         {
             Player result = null;
             try
@@ -45,16 +45,12 @@ namespace Domain
             }
             catch
             {
-                return OperationResult<RatingEntry>.Failure();
+                return OperationResult<PlayerInfo>.Failure();
             }
 
-            return OperationResult<RatingEntry>.Success(new RatingEntry(
-                result.name,
-                result.score,
-                result.elementCount,
-                result.place));
+            return OperationResult<PlayerInfo>.Success(new PlayerInfo(result.name, result.score));
         }
-        
+
         [Serializable]
         private class Players
         {

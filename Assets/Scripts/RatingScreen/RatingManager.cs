@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Domain;
@@ -9,99 +10,65 @@ namespace RatingScreen
 {
 	public class RatingManager : MonoBehaviour
 	{
-		public GameObject canvas;
-		public GameObject ratingPrefab;
-		public GameObject threeDotsPrefab;
+		public GameObject ratingPanel;
 		public GameObject underUpperLayer;
 
 		private GameObject _somethingWrongWindowPrefab;
+		private GameObject _ratingElementPrefab;
+
 
 		private void Start()
 		{
-			_somethingWrongWindowPrefab = (GameObject) Resources.Load("Prefabs/SomethingWrongWindow", typeof(GameObject));
+			_somethingWrongWindowPrefab = (GameObject) Resources.Load("Prefabs/SomethingWrongWindow", 
+				typeof(GameObject));
+			_ratingElementPrefab = (GameObject) Resources.Load("Prefabs/RatingElement", typeof(GameObject));
 
 			var ratingFetcher = new NetworkRatingFetcher();
 
 			var topRatingTask = ratingFetcher.GetTopRating();
-			var myRatingTask = ratingFetcher.GetMyRating();
+			var playerInfoTask = ratingFetcher.GetPlayerInfo();
 
 			Task.WhenAll(
 				topRatingTask,
-				myRatingTask
+				playerInfoTask
 			).ContinueWith(_ =>
 			{
-				if (topRatingTask.IsCanceled
-				    || topRatingTask.IsFaulted
-				    || myRatingTask.IsCanceled
-				    || myRatingTask.IsFaulted)
+				if (topRatingTask.IsCanceled || topRatingTask.IsFaulted || !topRatingTask.Result.IsSuccess)
 				{
 					Instantiate(_somethingWrongWindowPrefab, underUpperLayer.transform);
+					return;
 				}
 
 				var topRatingResult = topRatingTask.Result;
-				var myRatingResult = myRatingTask.Result;
 
-				if (!topRatingResult.IsSuccess || !myRatingResult.IsSuccess)
+				PlayerInfo playerInfo = null;
+				if (! playerInfoTask.IsCanceled && !playerInfoTask.IsFaulted && playerInfoTask.Result.IsSuccess)
 				{
-					Instantiate(_somethingWrongWindowPrefab, underUpperLayer.transform);
+					playerInfo = playerInfoTask.Result.Data;
 				}
 
-				RenderRatings(topRatingResult.Data, myRatingResult.Data);
-			}, TaskScheduler.FromCurrentSynchronizationContext());
+				RenderRatings(topRatingResult.Data, playerInfo);
+			}, 
+				TaskScheduler.FromCurrentSynchronizationContext());
 		}
 
-		private void RenderRatings(IEnumerable<RatingEntry> top, RatingEntry own)
+		private void RenderRatings(IEnumerable<RatingEntry> top, PlayerInfo playerInfo)
 		{
-			// re-sort just in case
 			var orderedRatings = top.OrderBy(x => x.Position).ToArray();
 
-			var lastPositionOfTop = orderedRatings.Last().Position;
-
-			if (own.Position <= lastPositionOfTop)
+			foreach (var ratingEntry in orderedRatings)
 			{
-				// player is in top: just render top
-				RenderPlayerInTop(own, orderedRatings);
-			}
-			else if (own.Position == lastPositionOfTop + 1)
-			{
-				// player is right after the top: render player after top
-				RenderPlayerRightAfterTop(own, orderedRatings);
-			}
-			else
-			{
-				// player is way outside of top: render three dots and player after
-				RenderPlayerWayOutOfTop(own, orderedRatings);
-			}
-		}
-
-		private void RenderPlayerWayOutOfTop(RatingEntry own, IEnumerable<RatingEntry> orderedRatings)
-		{
-			foreach (var entry in orderedRatings)
-			{
-				Instantiate(ratingPrefab, canvas.transform).GetComponent<RatingEntryElement>().Setup(entry, false);
-			}
-
-			Instantiate(threeDotsPrefab, canvas.transform);
-
-			Instantiate(ratingPrefab, canvas.transform).GetComponent<RatingEntryElement>().Setup(own, true);
-		}
-
-		private void RenderPlayerRightAfterTop(RatingEntry own, IEnumerable<RatingEntry> orderedRatings)
-		{
-			foreach (var entry in orderedRatings)
-			{
-				Instantiate(ratingPrefab, canvas.transform).GetComponent<RatingEntryElement>().Setup(entry, false);
-			}
-
-			Instantiate(ratingPrefab, canvas.transform).GetComponent<RatingEntryElement>().Setup(own, true);
-		}
-
-		private void RenderPlayerInTop(RatingEntry own, IEnumerable<RatingEntry> orderedRatings)
-		{
-			foreach (var entry in orderedRatings)
-			{
-				Instantiate(ratingPrefab, canvas.transform).GetComponent<RatingEntryElement>()
-					.Setup(entry, entry.Position == own.Position);
+				var isSelf = ratingEntry.Nickname == playerInfo?.Name
+				            && ratingEntry.Score == playerInfo?.Score;
+				try
+				{
+					Instantiate(_ratingElementPrefab, ratingPanel.transform)
+						.GetComponent<RatingEntryElement>().Setup(ratingEntry, isSelf);
+				}
+				catch (Exception ex)
+				{
+					Debug.Log(ex);
+				}
 			}
 		}
 	}
