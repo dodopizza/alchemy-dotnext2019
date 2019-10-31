@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using UniRx.Async;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -22,7 +23,7 @@ namespace MainScreen
             _elementImage = transform.GetChild(0).GetComponent<Image>();
         }
 
-        public async Task ChangeSprite(Sprite sprite)
+        public async UniTask ChangeSprite(Sprite sprite)
         {
             _elementImage.sprite = sprite;
             _elementImage.color = Color.white;
@@ -40,7 +41,7 @@ namespace MainScreen
             }
         }
         
-        public async Task Erase()
+        public async UniTask Erase()
         {
             if (!IsEmpty)
             {
@@ -49,13 +50,13 @@ namespace MainScreen
             }
         }
 
-        public async Task Mix()
+        public async UniTask Mix()
         {
             await MixAnimation();
             IsEmpty = true;
         }
         
-        private async Task EraseElementAnimation()
+        private async UniTask EraseElementAnimation()
         {
             float t = 0;
             
@@ -71,7 +72,7 @@ namespace MainScreen
             _elementImage.color = Color.clear;
         }
 
-        private async Task MixAnimation()
+        private async UniTask MixAnimation()
         {
             _elementImage.color = Color.clear;
 

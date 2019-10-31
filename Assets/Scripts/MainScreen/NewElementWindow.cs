@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using UniRx.Async;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -23,7 +24,7 @@ namespace MainScreen
             elementDescription.text = description;
         }
 
-        public async Task Show()
+        public async UniTask Show()
         {
             float t = 0;
 

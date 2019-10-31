@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using UniRx.Async;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -11,13 +12,13 @@ namespace MainScreen
 
         private Vector3 _initialPosition;
         private Vector3 _finalPosition;
-        private Func<Task> _actionAfter;
+        private Func<UniTask> _actionAfter;
 
-        public async Task Run(
+        public async UniTask Run(
             Vector3 initialPosition,
             Vector3 finalPosition,
             Sprite sprite,
-            Func<Task> actionAfter)
+            Func<UniTask> actionAfter)
         {
             _initialPosition = initialPosition;
             _finalPosition = finalPosition;
@@ -31,7 +32,7 @@ namespace MainScreen
             await GoToMixPosition();
         }
 
-        private async Task GoToMixPosition()
+        private async UniTask GoToMixPosition()
         {
             float t = 0;
             var ms = (int)(duration * 50);

@@ -1,6 +1,6 @@
-using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
+using UniRx.Async;
 
 namespace MainScreen
 {
@@ -14,7 +14,7 @@ namespace MainScreen
             _elementImage = transform.GetChild(0).GetComponent<Image>();
         }
         
-        public async Task ChangeSprite(Sprite sprite, bool isFirstCreated)
+        public async UniTask ChangeSprite(Sprite sprite, bool isFirstCreated)
         {
             _elementImage.sprite = sprite;
             _elementImage.color = Color.white;
@@ -30,20 +30,20 @@ namespace MainScreen
             _elementImage.color = Color.clear;
         }
         
-        private async Task EraseElementAnimation()
+        private async UniTask EraseElementAnimation()
         {
             float t = 0;
             
             var waitForSeconds = duration * 0.05f;
             var ms = (int)(waitForSeconds * 1000);
 
-            await Task.Delay(ms * 10);
+            await UniTask.Delay(ms * 10);
 
             while (t <= 1)
             {
                 _elementImage.color = Color.Lerp(Color.white, Color.clear, t);
                 t += 0.05f;
-                await Task.Delay(ms);
+                await UniTask.Delay(ms);
             }
             
             _elementImage.color = Color.clear;

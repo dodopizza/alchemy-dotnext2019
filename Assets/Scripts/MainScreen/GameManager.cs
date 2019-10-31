@@ -1,13 +1,11 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Domain;
 using Domain.Interfaces;
 using Domain.Models;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UniRx.Async;
 
 namespace MainScreen
 {
@@ -70,6 +68,10 @@ namespace MainScreen
         {
             SetDragThreshold();
 
+            #if UNITY_IOS
+            Destroy(GameObject.Find("ExitButton"));
+            #endif
+            
             _recipeBook = new RecipeBook();
             _forge = new Forge(_recipeBook, new NetworkMixChecker());
 
@@ -98,12 +100,17 @@ namespace MainScreen
             EventSystem.current.pixelDragThreshold = Mathf.Max(defaultValue, (int) (defaultValue * Screen.dpi / 160f));
         }
 
+
         private void Update()
         {
+#if UNITY_IOS
+#else
             if (Input.GetKeyDown(KeyCode.Escape) && !_inputLocked)
             {
                 Exit();
             }
+#endif
+
         }
 
         public void Exit()
@@ -111,7 +118,7 @@ namespace MainScreen
             Instantiate(_confirmExitWindowPrefab, UnderUpperLayerTransform);
         }
         
-        public async Task PerformMix()
+        public async UniTask PerformMix()
         {
             var resultTask = _forge.GetMixResult();
             if (resultTask == null)
@@ -124,7 +131,7 @@ namespace MainScreen
                 var mixResult = operationResult.Data;
                 if (mixResult.IsSuccess)
                 {
-                    await Task.WhenAll(forgeSlotOne.Mix(), forgeSlotTwo.Mix());
+                    await UniTask.WhenAll(forgeSlotOne.Mix(), forgeSlotTwo.Mix());
 
                     if (mixResult.IsCrash)
                     {
@@ -160,7 +167,7 @@ namespace MainScreen
             }
         }
 
-        public async Task HandleUiOperation(Task uiOperation)
+        public async UniTask HandleUiOperation(UniTask uiOperation)
         {
             _inputLocked = true;
             await uiOperation;

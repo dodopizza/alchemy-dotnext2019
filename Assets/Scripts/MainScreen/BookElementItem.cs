@@ -1,8 +1,8 @@
-using System.Threading.Tasks;
 using Domain.Models;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using UniRx.Async;
 
 namespace MainScreen
 {
@@ -31,7 +31,7 @@ namespace MainScreen
             transform.name = element.Name;
         }
 
-        private Task SendElementToForge(ForgeSlot mixElement)
+        private UniTask SendElementToForge(ForgeSlot mixElement)
         {
             return Instantiate(floatingElementPrefab, _gameManager.UnderUpperLayerTransform)
                 .GetComponent<FloatingElement>()
@@ -71,7 +71,7 @@ namespace MainScreen
             CancelInvoke(nameof(OnLongPress));
         }
  
-        private async Task OnLongPress()
+        private async UniTask OnLongPress()
         {
             _held = true;
             var newElementWindow = Instantiate(_newElementWindowPrefab, _gameManager.UnderUpperLayerTransform)
