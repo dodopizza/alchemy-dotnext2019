@@ -48,6 +48,12 @@ namespace Domain
             if (operationResult.IsSuccess)
             {
                 var checkResult = operationResult.Data;
+
+                if (checkResult.CreatedElement.Id == Guid.Empty)
+                {
+                    return OperationResult<MixResult>.Success(MixResult.Crash());
+                }
+                
                 _book.SaveAttempt(firstId, secondId);
 
                 if (!checkResult.IsSuccess)

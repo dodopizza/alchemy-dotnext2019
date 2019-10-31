@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Domain;
 using Domain.Interfaces;
 using Domain.Models;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -125,7 +126,7 @@ namespace MainScreen
                 {
                     await Task.WhenAll(forgeSlotOne.Mix(), forgeSlotTwo.Mix());
 
-                    if (mixResult.Element.Id == Guid.Empty)
+                    if (mixResult.IsCrash)
                     {
                         //Easter egg
                         Debug.Log("Easter egg");
@@ -187,8 +188,7 @@ namespace MainScreen
             var newElement = Instantiate(_elementItemPrefab, elementsBook.transform);
                 
             newElement.GetComponent<BookElementItem>().SetUp(element);
-
-            SortBook(newElement.transform);
+//            SortBook(newElement.transform);
         }
 
         private void SortBook(Transform newElementTransform)
