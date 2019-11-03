@@ -34,8 +34,7 @@ namespace MainScreen
         {
             float t = 0;
             
-            var waitForSeconds = duration * 0.05f;
-            var ms = (int)(waitForSeconds * 1000);
+            var ms = (int)(duration * 50);
 
             await UniTask.Delay(ms * 10);
 

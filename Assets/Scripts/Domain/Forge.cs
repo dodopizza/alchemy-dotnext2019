@@ -49,16 +49,16 @@ namespace Domain
             {
                 var checkResult = operationResult.Data;
 
-                if (checkResult.CreatedElement.Id == Guid.Empty)
-                {
-                    return OperationResult<MixResult>.Success(MixResult.Crash());
-                }
-                
                 _book.SaveAttempt(firstId, secondId);
 
                 if (!checkResult.IsSuccess)
                 {
                     return OperationResult<MixResult>.Success(MixResult.Fail());
+                }
+                
+                if (checkResult.CreatedElement.Id == Guid.Empty)
+                {
+                    return OperationResult<MixResult>.Success(MixResult.Crash());
                 }
 
                 var isNewlyCreated = _book.CheckAndSaveNewRecipe(

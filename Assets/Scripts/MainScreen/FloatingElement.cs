@@ -41,7 +41,7 @@ namespace MainScreen
             {
                 transform.position = Vector3.Lerp(_initialPosition, _finalPosition, Mathf.SmoothStep(0f, 1f, t));
                 t += 0.05f;
-                await Task.Delay(ms);
+                await UniTask.Delay(ms);
             }
             Destroy(gameObject);
 

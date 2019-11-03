@@ -34,7 +34,7 @@ namespace MainScreen
             {
                 _canvasGroup.alpha = t;
                 t += 0.05f;
-                await Task.Delay(ms);
+                await UniTask.Delay(ms);
             }
 
             _canvasGroup.alpha = 1f;

@@ -66,7 +66,7 @@ namespace MainScreen
             {
                 _elementImage.color = Color.Lerp(Color.white, Color.clear, Mathf.SmoothStep(0f, 1f, t));
                 t += 0.05f;
-                await Task.Delay(ms);
+                await UniTask.Delay(ms);
             }
             
             _elementImage.color = Color.clear;
