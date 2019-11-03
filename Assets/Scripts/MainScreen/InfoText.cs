@@ -16,7 +16,7 @@ namespace MainScreen
                 textComponent.text = $"[Очки:{scores}]" 
                                      + Environment.NewLine 
                                      + Environment.NewLine 
-                                     + $"[Открыто {elements}/300]";
+                                     + $"[Открыто {elements}/128]";
             };
             GameManager.Instance.OnScoresAdd += _instanceOnOnScoresAdd;
         }
