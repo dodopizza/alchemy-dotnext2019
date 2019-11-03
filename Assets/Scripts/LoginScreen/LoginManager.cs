@@ -20,6 +20,7 @@ namespace LoginScreen
                 SceneManager.LoadSceneAsync("MainScreen");
             }
             
+            inputField.Select();
             _somethingWrongWindowPrefab = (GameObject) Resources.Load("Prefabs/SomethingWrongWindow", typeof(GameObject));
         }
 
