@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 4323918765519091986}
   - component: {fileID: 6823725348271609375}
   m_Layer: 5
-  m_Name: RatingEntryPrefab
+  m_Name: RatingElement
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -79,7 +79,7 @@ MonoBehaviour:
       m_Calls: []
   m_FontData:
     m_Font: {fileID: 12800000, guid: 08ec4560748744b5d86e3165d1ba9b89, type: 3}
-    m_FontSize: 28
+    m_FontSize: 30
     m_FontStyle: 0
     m_BestFit: 0
     m_MinSize: 0
