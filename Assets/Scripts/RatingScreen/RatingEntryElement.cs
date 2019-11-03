@@ -1,17 +1,21 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.UI;
 
-public class RatingEntryElement : MonoBehaviour
+namespace RatingScreen
 {
-    public void Setup(Domain.Models.RatingEntry entry, bool isSelf)
+    public class RatingEntryElement : MonoBehaviour
     {
-        var text = GetComponent<Text>();
-        text.text = $"{entry.Position}.{entry.Nickname}:{entry.Score}";
-        
-        if (isSelf)
+        public void Setup(Domain.Models.RatingEntry entry, bool isSelf)
         {
-            text.color = Color.red;
-            text.fontSize = 30;
+            var text = GetComponent<Text>();
+            text.text = $"{entry.Position}.{entry.Nickname}:{entry.Score}";
+
+            if (isSelf)
+            {
+                text.color = new Color32(255, 124, 36, Byte.MaxValue	);
+                text.fontSize = 35;
+            }
         }
     }
 }
