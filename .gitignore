@@ -32,3 +32,4 @@ ExportedObj/
 *.exe
 /iOS
 *.zip
+/iOS_*

@@ -2,6 +2,7 @@ using System.Threading.Tasks;
 using UniRx.Async;
 using UnityEngine;
 using UnityEngine.UI;
+using Utils;
 
 namespace MainScreen
 {
@@ -26,17 +27,8 @@ namespace MainScreen
 
         public async UniTask Show()
         {
-            float t = 0;
-
-            var ms = (int) (duration * 50);
-
-            while (t <= 1)
-            {
-                _canvasGroup.alpha = t;
-                t += 0.05f;
-                await UniTask.Delay(ms);
-            }
-
+            await AnimationRunner.Run((t) => { _canvasGroup.alpha = t; }, duration);
+            
             _canvasGroup.alpha = 1f;
             _canvasGroup.blocksRaycasts = true;
         }

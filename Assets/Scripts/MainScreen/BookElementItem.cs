@@ -1,8 +1,10 @@
+using System.Diagnostics;
 using Domain.Models;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using UniRx.Async;
+using Debug = UnityEngine.Debug;
 
 namespace MainScreen
 {
@@ -44,8 +46,6 @@ namespace MainScreen
 
         public async void OnPointerClick(PointerEventData eventData)
         {
-            Debug.Log("OnPointerClick");
-
             if (!_gameManager.CheckAndLockInput() || _held) 
                 return;
 

@@ -3,6 +3,7 @@ using UniRx.Async;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using Utils;
 
 namespace MainScreen
 {
@@ -58,17 +59,12 @@ namespace MainScreen
         
         private async UniTask EraseElementAnimation()
         {
-            float t = 0;
-            
-            var ms = (int)(duration * 50);
+            await AnimationRunner.Run(
+                (t) =>
+                {
+                    _elementImage.color = Color.Lerp(Color.white, Color.clear, Mathf.SmoothStep(0f, 1f, t));
+                }, duration);
 
-            while (t <= 1)
-            {
-                _elementImage.color = Color.Lerp(Color.white, Color.clear, Mathf.SmoothStep(0f, 1f, t));
-                t += 0.05f;
-                await UniTask.Delay(ms);
-            }
-            
             _elementImage.color = Color.clear;
         }
 

@@ -1,8 +1,11 @@
 using System;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using UniRx.Async;
 using UnityEngine;
 using UnityEngine.UI;
+using Utils;
+using Debug = UnityEngine.Debug;
 
 namespace MainScreen
 {
@@ -34,15 +37,12 @@ namespace MainScreen
 
         private async UniTask GoToMixPosition()
         {
-            float t = 0;
-            var ms = (int)(duration * 50);
+            await AnimationRunner.Run(
+                (t) =>
+                {
+                    transform.position = Vector3.Lerp(_initialPosition, _finalPosition, Mathf.SmoothStep(0f, 1f, t));
+                }, duration);
 
-            while (t <= 1)
-            {
-                transform.position = Vector3.Lerp(_initialPosition, _finalPosition, Mathf.SmoothStep(0f, 1f, t));
-                t += 0.05f;
-                await UniTask.Delay(ms);
-            }
             Destroy(gameObject);
 
             if (_actionAfter != null)
