@@ -1,4 +1,4 @@
-using System.Threading.Tasks;
+using System;
 using UniRx.Async;
 using UnityEngine;
 using UnityEngine.UI;
@@ -12,7 +12,6 @@ namespace MainScreen
 
         public Text elementName;
         public Text elementDescription;
-        public Text elementScore;
         public Image elementImage;
         private CanvasGroup _canvasGroup;
 
@@ -20,8 +19,7 @@ namespace MainScreen
         {
             elementImage.sprite = elementSprite;
             _canvasGroup = GetComponent<CanvasGroup>();
-            elementName.text = name;
-            elementScore.text = $"{score} {ScoreEndings(score)}";
+            elementName.text = name + Environment.NewLine + $"{score} {ScoreEndings(score)}";
             elementDescription.text = description;
         }
 

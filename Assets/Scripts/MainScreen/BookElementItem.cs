@@ -58,7 +58,7 @@ namespace MainScreen
         public void OnPointerDown(PointerEventData eventData)
         {
             _held = false;
-            Invoke(nameof(OnLongPress), 1);
+            Invoke(nameof(OnLongPress), 0.5f);
         }
  
         public void OnPointerUp(PointerEventData eventData)
