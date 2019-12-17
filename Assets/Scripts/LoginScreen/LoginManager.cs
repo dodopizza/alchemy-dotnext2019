@@ -24,7 +24,7 @@ namespace LoginScreen
             _somethingWrongWindowPrefab = (GameObject) Resources.Load("Prefabs/SomethingWrongWindow", typeof(GameObject));
         }
 
-        public async void Login()
+        public void Login()
         {
             var userId = Guid.NewGuid().ToString();
             var userName = inputField.text.Trim();
@@ -32,16 +32,16 @@ namespace LoginScreen
             if (string.IsNullOrEmpty(userName))
                 return;
             
-            var loginRequest = new LoginRequest
-            {
-                UserId = userId,
-                Name = userName
-            };
+            // var loginRequest = new LoginRequest
+            // {
+            //     UserId = userId,
+            //     Name = userName
+            // };
 
             try
             {
-                var url = Constants.ApiUrl + "/api/UserProfile/add";
-                await HttpClient.PostWithRetry(url, loginRequest);
+                // var url = Constants.ApiUrl + "/api/UserProfile/add";
+                // await HttpClient.PostWithRetry(url, loginRequest);
                 
                 PlayerPrefs.SetString(Constants.UserIdKey, userId);
                 PlayerPrefs.Save();
@@ -54,11 +54,11 @@ namespace LoginScreen
             }
         }
 
-        private class LoginRequest
-        {
-            public string Name;
-            
-            public string UserId;
-        }
+        // private class LoginRequest
+        // {
+        //     public string Name;
+        //     
+        //     public string UserId;
+        // }
     }
 }

@@ -9,16 +9,23 @@ namespace Domain
 {
     internal class RecipeBook : IRecipeBook
     {
+        private readonly IBaseElementsLoader _baseElementsLoader;
         private Dictionary<Guid, Element> _openedElements;
         private readonly Dictionary<(Guid firstId, Guid secondId), Guid> _openedRecipes;
 
+        public RecipeBook(IBaseElementsLoader baseElementsLoader)
+        {
+            _baseElementsLoader = baseElementsLoader;
+            _openedRecipes = Persistence.LoadRecipes();
+        }
+        
         public async Task<OperationResult<IEnumerable<Element>>> LoadInitialElements()
         {
             _openedElements = Persistence.LoadElements();
 
             if (_openedElements.Count == 0)
             {
-                var getInitialElements = await BaseElementsLoader.GetBaseElements();
+                var getInitialElements = await _baseElementsLoader.GetBaseElements();
 
                 if (getInitialElements.IsSuccess)
                 {
@@ -32,11 +39,6 @@ namespace Domain
             }
 
             return OperationResult<IEnumerable<Element>>.Success(_openedElements.Values);
-        }
-
-        public RecipeBook()
-        {
-            _openedRecipes = Persistence.LoadRecipes();
         }
 
         public bool TryGetPreviousResult(Guid firstElementId, Guid secondElementId, out Element element)

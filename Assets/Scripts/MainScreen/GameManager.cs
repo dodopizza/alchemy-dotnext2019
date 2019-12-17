@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Domain;
 using Domain.Interfaces;
+using Domain.Local;
 using Domain.Models;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -72,8 +73,9 @@ namespace MainScreen
             Destroy(GameObject.Find("ExitButton"));
             #endif
             
-            _recipeBook = new RecipeBook();
-            _forge = new Forge(_recipeBook, new NetworkMixChecker());
+            var csvWorker = new CsvWorker();
+            _recipeBook = new RecipeBook(csvWorker);
+            _forge = new Forge(_recipeBook, csvWorker);
 
             _elementItemPrefab = (GameObject) Resources.Load("Prefabs/ElementItem", typeof(GameObject));
             _newElementWindowPrefab = (GameObject) Resources.Load("Prefabs/NewElementWindow", typeof(GameObject));

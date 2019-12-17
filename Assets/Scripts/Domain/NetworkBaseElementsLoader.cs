@@ -8,9 +8,9 @@ using Utils;
 
 namespace Domain
 {
-    public static class BaseElementsLoader
+    public class NetworkBaseElementsLoader : Interfaces.IBaseElementsLoader
     {
-        public static async Task<OperationResult<IEnumerable<Element>>> GetBaseElements()
+        public async Task<OperationResult<IEnumerable<Element>>> GetBaseElements()
         {
             BaseElements intermediateResult = null;
             try
